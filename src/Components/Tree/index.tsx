@@ -10,9 +10,9 @@ const { Search } = Input;
 interface Props {
   handleContextMenuClick: (key: string) => void;
   onCut: (key: string) => void;
-  onSelect: (key: string[]) => void;
+  onDelete: (key: string[]) => void;
 }
-const TreeExtended = ({ onSelect, handleContextMenuClick, onCut }: Props) => {
+const TreeExtended = ({ onDelete, handleContextMenuClick, onCut }: Props) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [checkedKeys, setCheckedKeys] = useState([]);
@@ -34,30 +34,45 @@ const TreeExtended = ({ onSelect, handleContextMenuClick, onCut }: Props) => {
     setAutoExpandParent(false);
   };
 
+  const searchNodeByTitle = (node, targetTitle)=> {
+
+
+    if (node.title.includes(targetTitle)) {
+         setSearchResult((res) => ([ ...res, node ]));
+    }
+
+    for (const child of node.children) {
+        const result = searchNodeByTitle(child, targetTitle);
+        if (result) {
+          setSearchResult((res) => ([ ...res, result ]));
+         
+          console.log(searchResult);
+          console.log(result);
+        }
+    }
+
+    return null;
+}
+
   const handleSearchInputChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setSearchInput(e.target.value)
-    setSearchResult(
-      treeData.filter((item) => {
-        return (
-          item.title.includes(searchInput) ||
-          item.users.includes(searchInput) 
-        );
-      })
-    );
+   
   };
-console.log(searchInput)
-console.log(treeData)
+// console.log(searchInput)
+// console.log(treeData)
 
   const handlePressEnter = () => {
+    setSearchResult([])
+    searchNodeByTitle(treeData[0], searchInput);
     setSearchResultVisible(true);
   };
   const titleRenderer = (node: NodeType) => {
     return <Node node={node} handleContextMenuClick={handleContextMenuClick} />;
   };
   const handleNodeSelect = (node: any,info:any) => {
-    onSelect(node);
+    onDelete(node);
     if (info.node.children.length === 0) {
       onCut(info);
     }

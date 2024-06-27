@@ -4,17 +4,15 @@ import Form from "./Components/Form";
 import Sidebar from "./Components/Sidebar";
 import ExtendedTree from "./Components/Tree";
 import { getNodes } from "./transportLayer";
-import { deleteEmptyChildren  } from "./Components/Util/utils";
+import { deleteEmptyChildren } from "./Components/Util/utils";
 import { NodeType } from "./types";
 
 function App() {
   const [selectedItem, setSelectedItem] = useState(null);
-  const [showEdit, setShowEdit] = useState(true);
+  const [showEdit, setShowEdit] = useState(false);
   const [treeData, setTreeData] = useState([]);
   const [selectedNodeId, setSelectedNodeId] = useState([]);
   const [clipBoard, setClipBoard] = useState(null);
-
-
 
   // const selectedClipboard = cutEmptyChildren
 
@@ -75,16 +73,17 @@ function App() {
         updateTreeData: handleUpdateTree,
       }}
     >
-      <div className="App">
+      <div className="App" dir="rtl">
         <Sidebar>
           <ExtendedTree
-            onSelect={setSelectedNodeId}
+            onDelete={setSelectedNodeId}
             onCut={setClipBoard}
             handleContextMenuClick={handleContextMenuClick}
+            onSelect={setSelectedItem}
             // setSelectedNodeKey={setSelectedNodeKey}
           />
         </Sidebar>
-        {showEdit && <Form item={selectedItem} updateNode={handleUpdateNode}  />}
+        {showEdit && <Form item={selectedItem} updateNode={handleUpdateNode} />}
       </div>
     </AppContext.Provider>
   );
