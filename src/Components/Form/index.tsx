@@ -18,7 +18,7 @@ function Form({ item, updateNode }: Props) {
 	const handleSave = () => {
 		updateNode('key', {})
 	}
-console.log(item)
+	
 	return (
 		<div className='detail'>
 			<div>

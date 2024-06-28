@@ -1,5 +1,5 @@
 import { Form, Input } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import UserAutoComplete from './user-autocomplete';
 
 interface Props {
@@ -9,15 +9,21 @@ interface Props {
 function BasicInformation({ initialValue }: Props) {
 	const [form] = Form.useForm();
 
+	useEffect(() => {
+		form.setFieldsValue({
+		  title: initialValue?.title,
+		  code: initialValue?.key,
+		  users: initialValue?.users?.title,
+		});
+	  }, [initialValue]);
+
 	return (
 		<Form form={form}>
-			<Form.Item initialValue={initialValue.title} name="title" label="عنوان" labelCol={{ span: 2 }} >
-				<Input   value={initialValue.title}  />
-				<input value={initialValue.title} />
+			<Form.Item  name="title" label="عنوان" labelCol={{ span: 2 }} >
+				<Input     />
 			</Form.Item>
-			{/* <p>{initialValue.title}</p> */}
-			<Form.Item name="code" label="کد" labelCol={{ span: 2 }}>
-				<Input defaultValue={initialValue.key} />
+			<Form.Item  name="code" label="کد" labelCol={{ span: 2 }}>
+				<Input  />
 			</Form.Item>
 			<Form.Item name="users" label="کاربران" labelCol={{ span: 2 }}>
 				<UserAutoComplete  />

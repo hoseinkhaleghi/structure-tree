@@ -16,7 +16,6 @@ function Node({node, handleContextMenuClick}:Props) {
         id={node.key}
         title={node.title}
        />
-      
       <ContextMenuEx  id={node.key} >
         <ContextMenuItemEx  handleClick={handleContextMenuClick('Add')} title={'افزودن زیرشاخه'}/>
         <ContextMenuItemEx handleClick={handleContextMenuClick('Cut')} title={'برش'}/>
