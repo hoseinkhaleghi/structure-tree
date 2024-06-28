@@ -9,10 +9,10 @@ import SearchResult from "./searchResult";
 const { Search } = Input;
 interface Props {
   handleContextMenuClick: (key: string) => void;
-  onCut: (key: string) => void;
-  onDelete: (key: string[]) => void;
+  setSelectedInfo: (key: string) => void;
+  setSelectedNodeKey: (key: string[]) => void;
 }
-const TreeExtended = ({ onDelete, handleContextMenuClick, onCut }: Props) => {
+const TreeExtended = ({ setSelectedNodeKey, handleContextMenuClick, setSelectedInfo }: Props) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [checkedKeys, setCheckedKeys] = useState([]);
@@ -72,10 +72,20 @@ const TreeExtended = ({ onDelete, handleContextMenuClick, onCut }: Props) => {
     return <Node node={node} handleContextMenuClick={handleContextMenuClick} />;
   };
   const handleNodeSelect = (node: any,info:any) => {
-    onDelete(node);
-    if (info.node.children.length === 0) {
-      onCut(info);
-    }
+
+
+
+      setSelectedNodeKey(node);
+      setSelectedInfo(info.node);
+
+
+
+    // console.log(info);
+
+    // if (info.node.children.length === 0) {
+    //   setSelectedInfo(info);
+    // }
+    
     // console.log(info.node.children)
   };
 
@@ -103,8 +113,9 @@ const TreeExtended = ({ onDelete, handleContextMenuClick, onCut }: Props) => {
         onSelect={handleNodeSelect}
         onCheck={onCheck}
         checkedKeys={checkedKeys}
+        draggable
       />
-      {searchResultVisible && <SearchResult searchResultVisible={searchResultVisible} setSearchResultVisible={setSearchResultVisible} items={searchResult} />}
+      {searchResultVisible && <SearchResult searchResultVisible={searchResultVisible} setSearchResultVisible={setSearchResultVisible} items={searchResult} setSelectedInfo={setSelectedInfo} />}
     </div>
   );
 };

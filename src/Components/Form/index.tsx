@@ -18,20 +18,20 @@ function Form({ item, updateNode }: Props) {
 	const handleSave = () => {
 		updateNode('key', {})
 	}
-
+console.log(item)
 	return (
 		<div className='detail'>
 			<div>
 				<Tabs >
 					<Tabs.TabPane tab="اطلاعات اصلی" key="item-1">
 						<div className='form-content'>
-							<BasicInformation initialValue={item?.data.basicInformation} />
+							<BasicInformation initialValue={item} />
 						</div>
 					</Tabs.TabPane>
 					<Tabs.TabPane tab="دسترسی ها" key="item-2">
 						<div className='form-content'>
 							<ErrorBoundry>
-								<Accesses initialValue={item?.data.accesses} />
+								<Accesses initialValue={item} />
 							</ErrorBoundry>
 						</div>
 					</Tabs.TabPane>
