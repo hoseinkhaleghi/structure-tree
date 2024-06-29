@@ -3,7 +3,7 @@ import { NodeType } from './types';
 
 
 interface AppContext {
-    updateTreeData: (nodes: NodeType[]) => void;
+    updateTreeData: any
     treeData: NodeType[];
 }
 

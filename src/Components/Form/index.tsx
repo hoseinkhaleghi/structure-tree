@@ -2,15 +2,15 @@ import { Input, Tabs } from 'antd';
 import React from 'react';
 import ErrorBoundry from '../../ErrorBoundry';
 import ActionBar from '../ActionBar';
-import ArrowDownIcon from '../SvgIcons/arrow-down';
-import ArrowUpIcon from '../SvgIcons/arrow-up';
+// import ArrowDownIcon from '../SvgIcons/arrow-down';
+// import ArrowUpIcon from '../SvgIcons/arrow-up';
 import Accesses from './accesses';
 import BasicInformation from './basic-information';
-import UsersList from './user-autocomplete';
+// import UsersList from './user-autocomplete';
 
 interface Props {
 	item: any;
-	updateNode: (key: string, data: any) => void
+	updateNode: (key: string, data: any) => void;
 }
 
 function Form({ item, updateNode }: Props) {

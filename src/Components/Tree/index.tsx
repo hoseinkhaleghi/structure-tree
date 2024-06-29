@@ -1,63 +1,56 @@
 import { Input, Tree } from "antd";
-// import type { DataNode } from 'antd/es/tree';
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import AppContext from "../../appContext";
 import { NodeType } from "../../types";
 import Node from "./node";
 import SearchResult from "./searchResult";
-// import Item from "antd/lib/list/Item";
 const { Search } = Input;
 interface Props {
   handleContextMenuClick: (key: string) => void;
-  setSelectedInfo: (key: string) => void;
-  setSelectedNodeKey: (key: string[]) => void;
+  setSelectedInfo: any;
+  setShowEdit: any;
+  setSelectedNodeKey: any;
+  selectedInfo: any;
+  setSelectedSearchResult: any;
+  selectedSearchResult: any;
 }
 const TreeExtended = ({
   setSelectedNodeKey,
   handleContextMenuClick,
   setSelectedInfo,
+  setShowEdit,
+  selectedInfo,
+  setSelectedSearchResult,
 }: Props) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const [checkedKeys, setCheckedKeys] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const searchedKeyword = useRef();
   const [searchResultVisible, setSearchResultVisible] = useState(false);
-  const [searchResult, setSearchResult] = useState([]);
-  const [searchInput, setSearchInput] = useState([]);
-  // const [selectedNodeKey, setSelectedNodeKey] = useState(null);
+  const [searchResult, setSearchResult] = useState([]) as any;
+  const [searchInput, setSearchInput] = useState([]) as any;
 
   const { treeData } = useContext(AppContext);
-  // const onExpand = (newExpandedKeys: any[]) => {
-  //   setExpandedKeys(newExpandedKeys);
-  //   setAutoExpandParent(false);
-  // };
   const onExpand = (expandedKeysValue: any[]) => {
     setExpandedKeys(expandedKeysValue);
-    setAutoExpandParent(false);
+    setAutoExpandParent(true);
   };
 
   const searchNodeByTitle = (node: any, targetTitle: any) => {
     if (node.title.includes(targetTitle)) {
-      setSearchResult((res) => [...res, node]);
+      setSearchResult((res: any) => [...res, node]);
     }
 
     for (const child of node.children) {
       const result = searchNodeByTitle(child, targetTitle);
       if (result) {
-        setSearchResult((res) => [...res, result]);
+        setSearchResult((res: any) => [...res, result]);
       }
     }
-
     return null;
   };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
-  // console.log(searchInput)
-  // console.log(treeData)
-
   const handlePressEnter = () => {
     setSearchResult([]);
     searchNodeByTitle(treeData[0], searchInput);
@@ -67,28 +60,16 @@ const TreeExtended = ({
     return <Node node={node} handleContextMenuClick={handleContextMenuClick} />;
   };
   const handleNodeSelect = (node: any, info: any) => {
+    setSelectedSearchResult(info);
     setSelectedNodeKey(node);
     setSelectedInfo(info.node);
-
-    // console.log(info);
-
-    // if (info.node.children.length === 0) {
-    //   setSelectedInfo(info);
-    // }
-
-    // console.log(info.node.children)
+    setShowEdit(true);
   };
-
-  const onCheck = (checkedKeysValue: any) => {
-    setCheckedKeys(checkedKeysValue);
-  };
-
-  useEffect(() => {}, [treeData]);
 
   return (
     <div className="tree-wrap">
       <Search
-        style={{ marginBottom: 8 }}
+        style={{ marginBottom: 20 }}
         placeholder="جستجو"
         onChange={handleSearchInputChange}
         onPressEnter={handlePressEnter}
@@ -96,15 +77,12 @@ const TreeExtended = ({
       />
 
       <Tree
-        checkable
         onExpand={onExpand}
         expandedKeys={expandedKeys}
         autoExpandParent={autoExpandParent}
         treeData={treeData}
         titleRender={titleRenderer}
         onSelect={handleNodeSelect}
-        onCheck={onCheck}
-        checkedKeys={checkedKeys}
       />
 
       {searchResultVisible && (
@@ -113,6 +91,8 @@ const TreeExtended = ({
           setSearchResultVisible={setSearchResultVisible}
           items={searchResult}
           setSelectedInfo={setSelectedInfo}
+          selectedInfo={selectedInfo}
+          setExpandedKeys={setExpandedKeys}
         />
       )}
     </div>

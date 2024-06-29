@@ -1,6 +1,4 @@
-import React from 'react';
-interface Props { }
-function Modal({ }: Props) {
+function Modal() {
 	return;
 }
 export default Modal

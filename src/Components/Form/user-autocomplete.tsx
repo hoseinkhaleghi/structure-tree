@@ -4,7 +4,7 @@ import { getUsers } from '../../transportLayer';
 
 
 const UserAutoComplete: React.FC = () => {
-  const orginalOptions = useRef([]);
+  const orginalOptions = useRef([]) as any
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
 
   useEffect(() => {
@@ -17,12 +17,12 @@ const UserAutoComplete: React.FC = () => {
 
   const onSearch = (searchText: string) => {
     setOptions(
-      orginalOptions.current.filter(o => o.label.indexOf(searchText) > -1 )
+      orginalOptions.current.filter((o: { label: string | string[]; }) => o.label.indexOf(searchText) > -1 )
     );
   };
 
   const onSelect = (data: string) => {
-    console.log('onSelect', data);
+    // console.log('onSelect', data);
   };
 
   return (

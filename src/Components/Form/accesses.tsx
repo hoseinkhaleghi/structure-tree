@@ -6,11 +6,11 @@ interface Props {
 	initialValue?: any;
 }
 
-function Accesses({ }: Props) {
+function Accesses({ initialValue }: Props) {
 	const [options, setOptions] = useState([]);
 
 	const fetchAccessList = async () => {
-		const result = await getAccessList();
+		const result :any = await getAccessList();
 		setOptions(result);
 	}
 

@@ -5,10 +5,14 @@ export interface UserType {
 export interface NodeType {
 	title: string;
 	users: UserType[];
-	key: string ;
+	key: string;
 	children?: NodeType[];
 	parentKey?: string;
 	data?: any[];
 	hierarchy: string[];
 	accesses: string[];
-}
+  }
+  
+  export interface UserType {
+	// تعریف ویژگی‌های مورد نیاز
+  }

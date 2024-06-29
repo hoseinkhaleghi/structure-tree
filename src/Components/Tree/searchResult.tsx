@@ -1,43 +1,54 @@
-import React from 'react';
-import { NodeType } from '../../types';
-import ArrowUpIcon from '../SvgIcons/arrow-up';
+import { NodeType } from "../../types";
+import ArrowUpIcon from "../SvgIcons/arrow-up";
 interface Props {
-  items: (NodeType & { hierarchy: string[] })[],
-  setSearchResultVisible : (key: boolean) => void,
-  searchResultVisible:boolean,
-  setSelectedSearchResult: (item: NodeType | null) => void,
+  items: (NodeType & { hierarchy: string[] })[];
+  setSearchResultVisible: (key: boolean) => void;
+  searchResultVisible: boolean;
+  setSelectedInfo: any;
+  selectedInfo: any;
+  setExpandedKeys: any;
 }
-function SearchResult({ items,searchResultVisible , setSearchResultVisible, setSelectedSearchResult }: Props) {
+function SearchResult({
+  items,
+  searchResultVisible,
+  setSearchResultVisible,
+  setSelectedInfo,
+  setExpandedKeys,
+}: Props) {
   const handleItemClick = (item: NodeType) => {
-    setSelectedSearchResult(item);
-	console.log(item,"klkl")
+    setSelectedInfo(item);
+    console.log(item);
+    setExpandedKeys(item.hierarchy);
+    // selectedSearchResult.selected === true
+    // setSelectedSearchResult((prevState: any) => ({
+    // 	...prevState,
+    // 	selected: true,
+    //   }))
+  };
 
-	// item.title="an "
-};
-
-
-return (
-  <div className='search-result' style={{height: 200, overflow: 'auto'}}>
-	{searchResultVisible && (
-	  <div
-		style={{
-		  inset: "0px",
-		  display: 'flex',
-		  justifyContent: 'center',
-		  alignItems: 'center',
-		  justifyItems: 'center'
-		}}
-		onClick={() => setSearchResultVisible(false)}
-	  >
-		<ArrowUpIcon />
-	  </div>
-	)}
-	{items.map(item => (
-	  <div style={{marginTop:10}} key={item.key} onClick={() => handleItemClick(item)}>
-		{item.title}
-	  </div>
-	))}
-  </div>
-);
+  return (
+    <div className="search-result" style={{ height: 200, overflow: "auto" }}>
+      {searchResultVisible && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+          onClick={() => setSearchResultVisible(false)}
+        >
+          <ArrowUpIcon />
+        </div>
+      )}
+      {items.map((item) => (
+        <div
+          style={{ marginTop: 20, cursor: "pointer" }}
+          key={item.key}
+          onClick={() => handleItemClick(item)}
+        >
+          {item.title}
+        </div>
+      ))}
+    </div>
+  );
 }
 export default SearchResult;
