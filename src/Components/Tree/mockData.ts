@@ -1,5 +1,4 @@
 import { NodeType } from "../../types";
-
 export function createTreeMockData(): NodeType[] {
   return [
     {
@@ -18,7 +17,7 @@ export function createTreeMockData(): NodeType[] {
               isDefault: true,
             },
           ],
-          accesses: [],
+          accesses: ["1","2"],
           children: [
             {
               key: "3",
@@ -48,7 +47,7 @@ export function createTreeMockData(): NodeType[] {
                     },
                   ],
                   children: [],
-                  accesses: [],
+                  accesses: ["1","3"],
                 },
               ],
               accesses: [],
@@ -69,7 +68,7 @@ export function createTreeMockData(): NodeType[] {
                 },
               ],
               children: [],
-              accesses: [],
+              accesses: ["3"],
             },
           ],
         },

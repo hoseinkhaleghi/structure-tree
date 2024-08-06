@@ -1,30 +1,50 @@
+
 import React, { useEffect, useState } from 'react';
-import { Checkbox } from 'antd';
 import { getAccessList } from '../../transportLayer';
+import { Checkbox } from 'antd';
+
+interface Access {
+  label: string;
+  id: string;
+}
 
 interface Props {
-	initialValue?: any;
+  initialValue?: any;
 }
 
 function Accesses({ initialValue }: Props) {
-	const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<Access[]>([]);
+  const [checkedList, setCheckedList] = useState<string[]>([]);
 
-	const fetchAccessList = async () => {
-		const result :any = await getAccessList();
-		setOptions(result);
-	}
+  const fetchAccessList = async () => {
+    try {
+      const result: Access[] = await getAccessList();
+      setOptions(result);
+    } catch (error) {
+      console.error("Error fetching access list:", error);
+    }
+  };
 
-	useEffect(() => {
-		fetchAccessList()
-	}, [])
+  useEffect(() => {
+    fetchAccessList();
+  }, []);
 
+  const onChange = (checkedValues: any) => {
+    setCheckedList(checkedValues);
+  };
 
-	function handleOnChange() {
-
-	}
-
-	return (
-		<Checkbox.Group options={options as any} onChange={handleOnChange} />
-	);
+  return (
+    <>
+      <h3>لیست دسترسی‌ها:</h3>
+      <Checkbox.Group
+        options={options.map(option => ({
+          label: option.label,
+          value: option.id,
+        }))}
+        value={checkedList}
+        onChange={onChange}
+      />
+    </>
+  );
 }
-export default Accesses
+export default Accesses;
