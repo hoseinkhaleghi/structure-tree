@@ -94,7 +94,7 @@ function App() {
           if (destinationItem?.children) {
             destinationItem.children.push(item);
           } else {
-            console.log("شیء مورد نظر پیدا نشد");
+            console.log("شخص مورد نظر پیدا نشد");
           }
     
           break;

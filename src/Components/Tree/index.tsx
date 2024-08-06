@@ -65,6 +65,7 @@ const TreeExtended = ({
     setSelectedInfo(info.node);
     setShowEdit(true);
   };
+  console.log(selectedInfo.key,"adasda")
 
   return (
     <div className="tree-wrap">
@@ -83,8 +84,8 @@ const TreeExtended = ({
         treeData={treeData}
         titleRender={titleRenderer}
         onSelect={handleNodeSelect}
+        selectedKeys={selectedInfo.key}
       />
-
       {searchResultVisible && (
         <SearchResult
           searchResultVisible={searchResultVisible}
