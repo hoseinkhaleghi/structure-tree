@@ -18,6 +18,7 @@ function App() {
   const [clipBoard, setClipBoard] = useState([]) as any;
   const [paste, setPaste] = useState({}) as any;
   const [selectedInfo, setSelectedInfo] = useState({}) as any;
+  const [newNodeInfo, setNewNodeInfo] = useState({}) as any;
   const [selectedSearchResult, setSelectedSearchResult] = useState() as any;
 
   const selectedNodeIdString = selectedNodeId.join("");
@@ -32,23 +33,63 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("paste : ", paste);
-    console.log("treeData : ", treeData);
+    // console.log("paste : ", paste);
+    // console.log("treeData : ", treeData);
     const replaceTree: any = handleUpdateTree(
       treeData,
       clipBoard?.key,
       paste?.key
     );
-    console.log("replaceTree : ", replaceTree);
+    // console.log("replaceTree : ", replaceTree);
     setTreeData((prevState: any) => [...prevState, replaceTree]);
   }, [paste]);
+  useEffect(() => {
+    console.log("new : ", newNodeInfo);
+  }, [newNodeInfo]);
+  console.log("selected : ", selectedInfo);
+
+  const [maxKey, setMaxKey] = useState(0);
+
+  const findMaxKey = (node: { key: string; children: any }) => {
+    if (!node) return 0; // اگر نود وجود ندارد، 0 برگردانید
+    let max = parseInt(node.key, 10); // شروع با کلید فعلی
+    if (node.children) {
+      for (const child of node.children) {
+        const childMax = findMaxKey(child); // جستجو در فرزندان
+        if (childMax > max) {
+          max = childMax; // به روز رسانی بالاترین کلید
+        }
+      }
+    }
+    return max;
+  };
+  // useEffect(() => {
+  //   const max = findMaxKey(treeData[0]); // شروع با ریشه
+  //   setMaxKey(max);
+  // }, [maxKey]);
+  console.log("ad", maxKey);
 
   const handleContextMenuClick = (actionKey: any) => async () => {
     switch (actionKey) {
       case "Add":
-        console.log("Add");
+        // console.log("Add");
+        // setNewNodeInfo({
+        //   key: maxKey+1,
+        //   title: "",
+        //   parentKey: setSelectedInfo.key,
+        //   hierarchy: ["1", "2", "3", "4"],
+        //   users: [],
+        //   children: [],
+        //   accesses: [],
+        // });
+        const max = findMaxKey(treeData[0]); // شروع با ریشه
+        setMaxKey(max);    
+        const newInfo = { ...selectedInfo };
+        const lastNumber = Math.max(...newInfo.hierarchy.map(Number));
+        newInfo.hierarchy.push((lastNumber + 1).toString());
+        newInfo.key = (lastNumber + 1).toString();
+        setNewNodeInfo(newInfo);
         break;
-
       case "Delete":
         setTreeData((prevResult: any) => {
           return deleteEmptyChildren(prevResult, selectedNodeIdString);
@@ -82,21 +123,25 @@ function App() {
     sourceKey: string,
     destinationKey: string
   ): NodeType[] => {
-    function findAndMove(nodes: Type[], sourceKey: string, destinationKey: string) {
+    function findAndMove(
+      nodes: Type[],
+      sourceKey: string,
+      destinationKey: string
+    ) {
       for (let i = 0; i < nodes.length; i++) {
         const item = nodes[i];
-    
+
         if (item.key === sourceKey) {
           nodes.splice(i, 1);
-    
+
           const destinationItem = findItemByKey(treeData, destinationKey);
-    
+
           if (destinationItem?.children) {
             destinationItem.children.push(item);
           } else {
             console.log("شخص مورد نظر پیدا نشد");
           }
-    
+
           break;
         } else if (item.children && item.children.length > 0) {
           findAndMove(item.children, sourceKey, destinationKey);
@@ -106,7 +151,7 @@ function App() {
     function findItemByKey(array: Type[], key: string): Type | null {
       for (let i = 0; i < array.length; i++) {
         const item = array[i];
-    
+
         if (item.key === key) {
           return item;
         } else if (item.children) {
@@ -116,7 +161,7 @@ function App() {
           }
         }
       }
-    
+
       return null;
     }
     findAndMove(nodes, sourceKey, destinationKey);
@@ -150,12 +195,7 @@ function App() {
             selectedSearchResult={selectedSearchResult}
           />
         </Sidebar>
-        {showEdit && (
-          <Form
-            item={selectedInfo}
-            updateNode={handleUpdateNode}
-          />
-        )}
+        {showEdit && <Form item={selectedInfo} updateNode={handleUpdateNode} />}
       </div>
     </AppContext.Provider>
   );
