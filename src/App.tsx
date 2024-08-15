@@ -72,24 +72,22 @@ function App() {
   const handleContextMenuClick = (actionKey: any) => async () => {
     switch (actionKey) {
       case "Add":
-        // console.log("Add");
-        // setNewNodeInfo({
-        //   key: maxKey+1,
-        //   title: "",
-        //   parentKey: setSelectedInfo.key,
-        //   hierarchy: ["1", "2", "3", "4"],
-        //   users: [],
-        //   children: [],
-        //   accesses: [],
-        // });
+        // const max = findMaxKey(treeData[0]); // شروع با ریشه
+        // setMaxKey(max);
+        // const newInfo = { ...selectedInfo };
+        // const lastNumber = Math.max(...newInfo.hierarchy.map(Number));
+        // newInfo.hierarchy.push((lastNumber + 1).toString());
+        // newInfo.key = (lastNumber + 1).toString();
+        // setNewNodeInfo(newInfo);
+        // break;
         const max = findMaxKey(treeData[0]); // شروع با ریشه
-        setMaxKey(max);    
-        const newInfo = { ...selectedInfo };
-        const lastNumber = Math.max(...newInfo.hierarchy.map(Number));
-        newInfo.hierarchy.push((lastNumber + 1).toString());
-        newInfo.key = (lastNumber + 1).toString();
+        setMaxKey(max);
+        const newInfo = { title: '', key: (max + 1).toString(), users: [], accesses: [] };
         setNewNodeInfo(newInfo);
+        setSelectedInfo(newInfo); // مطمئن شوید که selectedInfo هم به روز شده است
+        setShowEdit(true); // نمایش فرم
         break;
+  
       case "Delete":
         setTreeData((prevResult: any) => {
           return deleteEmptyChildren(prevResult, selectedNodeIdString);
@@ -102,7 +100,6 @@ function App() {
             children: clipBoard,
           }));
         }
-
         setPaste(selectedInfo);
         // await  setTreeData((prevResult : any) => {
         //   return handleUpdateTree(treeData,clipBoard?.key , paste.key);
@@ -118,6 +115,8 @@ function App() {
       default:
     }
   };
+
+  ///////////////////////////////////////// Cut And Paste
   const handleUpdateTree = (
     nodes: NodeType[],
     sourceKey: string,
@@ -151,7 +150,6 @@ function App() {
     function findItemByKey(array: Type[], key: string): Type | null {
       for (let i = 0; i < array.length; i++) {
         const item = array[i];
-
         if (item.key === key) {
           return item;
         } else if (item.children) {
@@ -169,11 +167,75 @@ function App() {
     return nodes;
   };
 
-  const handleUpdateNode = (key: string, data: any) => {
-    // const updatedTreeData = [...treeData];
-    // اضافه کردن داده جدید به شاخه جدید
-    // حذف شاخه از جای قبلی
-    // setTreeData(updatedTreeData);
+  //////////////////////////////////// Add
+
+  const addNewNode = (parentKey: string, newNodeInfo: NodeType) => {
+    const updatedTreeData = treeData.map((node: { key: string; children: any; }) => {
+      if (node.key === parentKey) {
+        return {
+          ...node,
+          children: [...node.children, newNodeInfo],
+        };
+      }
+      // در صورت وجود فرزندان، بررسی فرزندان برای پیدا کردن parentKey
+      if (node.children) {
+        return {
+          ...node,
+          children: addNewNodeToChildren(node.children, parentKey, newNodeInfo),
+        };
+      }
+      return node;
+    });
+    setTreeData(updatedTreeData);
+  };
+  
+  const addNewNodeToChildren = (children: any, parentKey: any, newNodeInfo: any) => {
+    return children.map((child: { key: any; children: any; }) => {
+      if (child.key === parentKey) {
+        return {
+          ...child,
+          children: [...child.children, newNodeInfo],
+        };
+      }
+      if (child.children) {
+        return {
+          ...child,
+          children: addNewNodeToChildren(child.children, parentKey, newNodeInfo),
+        };
+      }
+      return child;
+    });
+  };
+
+  // const handleAddTree = () => {
+  //   if (selectedInfo && newNodeInfo) {
+  //     addNewNode(selectedInfo.key, newNodeInfo);
+  //     setShowEdit(false); // بستن فرم بعد از ثبت
+  //   }
+  // };
+  const handleAddTree = () => {
+    if (selectedInfo && newNodeInfo) {
+      addNewNode(selectedInfo.key, newNodeInfo);
+      setShowEdit(false); // بستن فرم بعد از ثبت
+      setNewNodeInfo({}); // ریست کردن اطلاعات نود جدید
+    }
+  };
+  
+  const handleUpdateNode = (key: string, newData: any) => {
+    setTreeData((prevData: any) => {
+      const updateNode = (data: any) => {
+        return data.map((node: { key: string; children: any; }) => {
+          if (node.key === key) {
+            return { ...node, ...newData }; // بروزرسانی اطلاعات نود
+          }
+          if (node.children) {
+            return { ...node, children: updateNode(node.children) }; // بروزرسانی فرزندان
+          }
+          return node;
+        });
+      };
+      return updateNode(prevData);
+    });
   };
 
   return (
@@ -195,7 +257,7 @@ function App() {
             selectedSearchResult={selectedSearchResult}
           />
         </Sidebar>
-        {showEdit && <Form item={selectedInfo} updateNode={handleUpdateNode} />}
+        {showEdit && <Form item={selectedInfo} updateNode={handleUpdateNode} handleAddTree={handleAddTree} />}
       </div>
     </AppContext.Provider>
   );

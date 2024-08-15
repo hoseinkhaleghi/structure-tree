@@ -56,15 +56,11 @@ export function createTreeMockData(): NodeType[] {
               key: "8",
               title: "حسین خالقی",
               parentKey: "3",
-              hierarchy: ["1", "2", "3", "4"],
+              hierarchy: ["1", "2", "3"],
               users: [
                 {
                   title: "alireza",
                   isDefault: true,
-                },
-                {
-                  title: "alirezatest",
-                  isDefault: false,
                 },
               ],
               children: [],
