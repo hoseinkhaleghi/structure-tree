@@ -75,7 +75,7 @@ function Form({ item, updateNode, handleAddTree }: Props) {
       form.setFieldsValue({
         title: item.title || '',
         code: item.key || '',
-        users: item.users?.map((user: { title: any; }) => user.title).join(', ') || [],
+        users: item.users?.map((user: { title: any; }) => user) || [],
       });
     }
   }, [item, form]);

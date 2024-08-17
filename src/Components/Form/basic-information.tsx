@@ -12,7 +12,9 @@ function BasicInformation({ initialValue, form }: Props) {
       form.setFieldsValue({
         title: initialValue.title || '',
         code: initialValue.key || '',
-        users: initialValue.users?.map((user: { title: any; }) => user.title).join(', ') || [],
+        users: initialValue.users?.map((user: {
+          isDefault: any; title: any; 
+}) => [user.title , user.isDefault]) || [],
       });
     }
   }, [initialValue, form]);
@@ -27,8 +29,8 @@ function BasicInformation({ initialValue, form }: Props) {
       <Form.Item name="users" label="کاربران" labelCol={{ span: 2 }}>
         <UserAutoComplete />
       </Form.Item>
-      <Form.Item name="accesses" label="دسترسی ها" labelCol={{ span: 2 }}>
-        <AntTable initialValue={initialValue?.accesses || []} /> 
+      <Form.Item name="title" label="دسترسی ها" labelCol={{ span: 2 }}>
+        <AntTable initialValue={initialValue?.users || []} /> 
       </Form.Item>
     </Form>
   );

@@ -17,7 +17,7 @@ function SearchResult({
 }: Props) {
   const handleItemClick = (item: NodeType) => {
     setSelectedInfo(item);
-    console.log(item);
+    // console.log(item);
     setExpandedKeys(item.hierarchy);
     // selectedSearchResult.selected === true
     // setSelectedSearchResult((prevState: any) => ({

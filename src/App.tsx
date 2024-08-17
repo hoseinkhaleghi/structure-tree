@@ -46,7 +46,7 @@ function App() {
   useEffect(() => {
     console.log("new : ", newNodeInfo);
   }, [newNodeInfo]);
-  console.log("selected : ", selectedInfo);
+  // console.log("selected : ", selectedInfo);
 
   const [maxKey, setMaxKey] = useState(0);
 
@@ -67,7 +67,7 @@ function App() {
   //   const max = findMaxKey(treeData[0]); // شروع با ریشه
   //   setMaxKey(max);
   // }, [maxKey]);
-  console.log("ad", maxKey);
+  // console.log("ad", maxKey);
 
   const handleContextMenuClick = (actionKey: any) => async () => {
     switch (actionKey) {
@@ -110,6 +110,7 @@ function App() {
       case "Cut":
         if (selectedInfo.children.length === 0) {
           setClipBoard(selectedInfo);
+          setNewNodeInfo(null)
         }
         break;
       default:
@@ -237,6 +238,8 @@ function App() {
       return updateNode(prevData);
     });
   };
+
+  console.log("tree",treeData)
 
   return (
     <AppContext.Provider

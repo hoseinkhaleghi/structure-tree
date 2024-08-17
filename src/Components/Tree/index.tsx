@@ -65,7 +65,7 @@ const TreeExtended = ({
     setSelectedInfo(info.node);
     setShowEdit(true);
   };
-  console.log(selectedInfo.key,"adasda")
+  // console.log(selectedInfo.key,"adasda")
 
   return (
     <div className="tree-wrap">
