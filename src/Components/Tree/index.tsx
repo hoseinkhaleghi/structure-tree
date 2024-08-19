@@ -13,6 +13,9 @@ interface Props {
   selectedInfo: any;
   setSelectedSearchResult: any;
   selectedSearchResult: any;
+  setNewNodeInfo: any;
+  isAddingNewNode:any;
+  setIsAddingNewNode:any;
 }
 const TreeExtended = ({
   setSelectedNodeKey,
@@ -21,6 +24,9 @@ const TreeExtended = ({
   setShowEdit,
   selectedInfo,
   setSelectedSearchResult,
+  setNewNodeInfo,
+  isAddingNewNode,
+  setIsAddingNewNode,
 }: Props) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
@@ -59,13 +65,27 @@ const TreeExtended = ({
   const titleRenderer = (node: NodeType) => {
     return <Node node={node} handleContextMenuClick={handleContextMenuClick} />;
   };
+  // const handleNodeSelect = (node: any, info: any) => {
+  //   if (!isAddingNewNode) { 
+  //     setSelectedSearchResult(info);
+  //     setSelectedNodeKey(node);
+  //     setSelectedInfo(info.node);
+  //     setShowEdit(true);
+  //     setNewNodeInfo(null);
+  //   }
+  //   setIsAddingNewNode(false);
+  // };
   const handleNodeSelect = (node: any, info: any) => {
-    setSelectedSearchResult(info);
-    setSelectedNodeKey(node);
-    setSelectedInfo(info.node);
-    setShowEdit(true);
-  };
-  // console.log(selectedInfo.key,"adasda")
+    if (isAddingNewNode) {
+        setIsAddingNewNode(false); // برای پایان دادن به فرآیند اضافه کردن نود جدید
+    } else {
+        setSelectedSearchResult(info);
+        setSelectedNodeKey(node);
+        setSelectedInfo(info.node);
+        setShowEdit(true);
+        // setNewNodeInfo(null); // پاک کردن newNodeInfo بعد از انتخاب نود
+    }
+};
 
   return (
     <div className="tree-wrap">

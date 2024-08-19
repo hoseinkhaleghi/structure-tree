@@ -20,6 +20,8 @@ function App() {
   const [selectedInfo, setSelectedInfo] = useState({}) as any;
   const [newNodeInfo, setNewNodeInfo] = useState({}) as any;
   const [selectedSearchResult, setSelectedSearchResult] = useState() as any;
+  const [isAddingNewNode, setIsAddingNewNode] = useState(false);
+
 
   const selectedNodeIdString = selectedNodeId.join("");
 
@@ -80,13 +82,14 @@ function App() {
         // newInfo.key = (lastNumber + 1).toString();
         // setNewNodeInfo(newInfo);
         // break;
-        const max = findMaxKey(treeData[0]); // شروع با ریشه
+        const max = findMaxKey(treeData[0]); 
         setMaxKey(max);
         const newInfo = { title: '', key: (max + 1).toString(), users: [], accesses: [] };
         setNewNodeInfo(newInfo);
-        setSelectedInfo(newInfo); // مطمئن شوید که selectedInfo هم به روز شده است
-        setShowEdit(true); // نمایش فرم
-        break;
+        setSelectedInfo(newInfo); 
+        setShowEdit(true); 
+        setIsAddingNewNode(true);  
+      break;
   
       case "Delete":
         setTreeData((prevResult: any) => {
@@ -218,7 +221,7 @@ function App() {
     if (selectedInfo && newNodeInfo) {
       addNewNode(selectedInfo.key, newNodeInfo);
       setShowEdit(false); // بستن فرم بعد از ثبت
-      setNewNodeInfo({}); // ریست کردن اطلاعات نود جدید
+      // setNewNodeInfo({}); // ریست کردن اطلاعات نود جدید
     }
   };
   
@@ -240,6 +243,9 @@ function App() {
   };
 
   console.log("tree",treeData)
+  console.log("sel",selectedInfo)
+  console.log("new",newNodeInfo)
+  console.log("add",isAddingNewNode)
 
   return (
     <AppContext.Provider
@@ -258,6 +264,9 @@ function App() {
             selectedInfo={selectedInfo}
             setSelectedSearchResult={setSelectedSearchResult}
             selectedSearchResult={selectedSearchResult}
+            setNewNodeInfo={setNewNodeInfo}
+            isAddingNewNode={isAddingNewNode}
+            setIsAddingNewNode={setIsAddingNewNode}
           />
         </Sidebar>
         {showEdit && <Form item={selectedInfo} updateNode={handleUpdateNode} handleAddTree={handleAddTree} />}
