@@ -45,9 +45,9 @@ function App() {
     // console.log("replaceTree : ", replaceTree);
     setTreeData((prevState: any) => [...prevState, replaceTree]);
   }, [paste]);
-  useEffect(() => {
-    console.log("new : ", newNodeInfo);
-  }, [newNodeInfo]);
+  // useEffect(() => {
+  //   console.log("new : ", newNodeInfo);
+  // }, [newNodeInfo]);
   // console.log("selected : ", selectedInfo);
 
   const [maxKey, setMaxKey] = useState(0);
@@ -79,21 +79,11 @@ function App() {
         const newInfo = { title: '', key: (maxKey + 1).toString(), users: [], accesses: [],children:[],hierarchy:[...selectedInfo.hierarchy],parentKey:selectedInfo.key };
         const lastNumber = Math.max(...selectedInfo.hierarchy.map(Number));
         newInfo.hierarchy.push((lastNumber + 1).toString());
-        newInfo.key = (lastNumber + 1).toString();
         setNewNodeInfo(newInfo);
         setIsAddingNewNode(true);
         setShowEdit(true);
         setSelectedInfo(newInfo);
         break;
-        // const max = findMaxKey(treeData[0]); 
-        // setMaxKey(max);
-        // const newInfo = { title: '', key: (max + 1).toString(), users: [], accesses: [],children:[] };
-        // setNewNodeInfo(newInfo);
-        // setSelectedInfo(newInfo); 
-        // setShowEdit(true); 
-        // setIsAddingNewNode(true);  
-      break;
-  
       case "Delete":
         setTreeData((prevResult: any) => {
           return deleteEmptyChildren(prevResult, selectedNodeIdString);
@@ -221,8 +211,8 @@ function App() {
   //   }
   // };
   const handleAddTree = () => {
-    if (selectedInfo && newNodeInfo) {
-      addNewNode(selectedInfo.key, newNodeInfo);
+    if (newNodeInfo) {
+      addNewNode(newNodeInfo.parentKey, newNodeInfo);
       setShowEdit(false); // بستن فرم بعد از ثبت
       // setNewNodeInfo({}); // ریست کردن اطلاعات نود جدید
     }
@@ -249,7 +239,7 @@ function App() {
   console.log("sel",selectedInfo)
   console.log("new",newNodeInfo)
   console.log("add",isAddingNewNode)
-  console.log("max",maxKey)
+  console.log("max",maxKey,typeof maxKey)
 
   return (
     <AppContext.Provider

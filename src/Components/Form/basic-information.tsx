@@ -4,6 +4,8 @@ import UserAutoComplete from "./user-autocomplete";
 import AntTable from "../Table";
 interface Props {
   initialValue?: any;
+  // newNodeInfo:any;
+  // isAddingNewNode:boolean;
   form: any; // اضافه کردن props برای فرم
 }
 function BasicInformation({ initialValue, form }: Props) {
