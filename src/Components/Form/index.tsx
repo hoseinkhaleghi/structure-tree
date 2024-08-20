@@ -53,8 +53,11 @@ interface Props {
   item: any;
   updateNode: (key: string, data: any) => void;
   handleAddTree: () => void;
+  setNewNodeInfo:any;
+  newNodeInfo:any;
+  isAddingNewNode:any;
 }
-function Form({ item, updateNode, handleAddTree }: Props) {
+function Form({ item, updateNode, handleAddTree,setNewNodeInfo,newNodeInfo,isAddingNewNode }: Props) {
   const [form] = AntForm.useForm();
 
   const handleSave = async () => {
@@ -71,14 +74,22 @@ function Form({ item, updateNode, handleAddTree }: Props) {
   };
 
   useEffect(() => {
-    if (item) {
+    if (isAddingNewNode) {
+      form.setFieldsValue({
+        title: newNodeInfo.title || '',
+        code: newNodeInfo.key || '',
+        users: newNodeInfo.users?.map((user: { title: any; }) => user) || [],
+      }
+      );
+    }else {
       form.setFieldsValue({
         title: item.title || '',
         code: item.key || '',
         users: item.users?.map((user: { title: any; }) => user) || [],
-      });
+      }
+      );
     }
-  }, [item, form]);
+  }, [item, form,isAddingNewNode,newNodeInfo]);
 
   return (
     <div className='detail'>

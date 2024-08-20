@@ -74,21 +74,24 @@ function App() {
   const handleContextMenuClick = (actionKey: any) => async () => {
     switch (actionKey) {
       case "Add":
-        // const max = findMaxKey(treeData[0]); // شروع با ریشه
-        // setMaxKey(max);
-        // const newInfo = { ...selectedInfo };
-        // const lastNumber = Math.max(...newInfo.hierarchy.map(Number));
-        // newInfo.hierarchy.push((lastNumber + 1).toString());
-        // newInfo.key = (lastNumber + 1).toString();
-        // setNewNodeInfo(newInfo);
-        // break;
-        const max = findMaxKey(treeData[0]); 
+        const max = findMaxKey(treeData[0]); // شروع با ریشه
         setMaxKey(max);
-        const newInfo = { title: '', key: (max + 1).toString(), users: [], accesses: [] };
+        const newInfo = { title: '', key: (maxKey + 1).toString(), users: [], accesses: [],children:[],hierarchy:[...selectedInfo.hierarchy],parentKey:selectedInfo.key };
+        const lastNumber = Math.max(...selectedInfo.hierarchy.map(Number));
+        newInfo.hierarchy.push((lastNumber + 1).toString());
+        newInfo.key = (lastNumber + 1).toString();
         setNewNodeInfo(newInfo);
-        setSelectedInfo(newInfo); 
-        setShowEdit(true); 
-        setIsAddingNewNode(true);  
+        setIsAddingNewNode(true);
+        setShowEdit(true);
+        setSelectedInfo(newInfo);
+        break;
+        // const max = findMaxKey(treeData[0]); 
+        // setMaxKey(max);
+        // const newInfo = { title: '', key: (max + 1).toString(), users: [], accesses: [],children:[] };
+        // setNewNodeInfo(newInfo);
+        // setSelectedInfo(newInfo); 
+        // setShowEdit(true); 
+        // setIsAddingNewNode(true);  
       break;
   
       case "Delete":
@@ -246,6 +249,7 @@ function App() {
   console.log("sel",selectedInfo)
   console.log("new",newNodeInfo)
   console.log("add",isAddingNewNode)
+  console.log("max",maxKey)
 
   return (
     <AppContext.Provider
@@ -269,7 +273,7 @@ function App() {
             setIsAddingNewNode={setIsAddingNewNode}
           />
         </Sidebar>
-        {showEdit && <Form item={selectedInfo} updateNode={handleUpdateNode} handleAddTree={handleAddTree} />}
+        {showEdit && <Form item={selectedInfo} updateNode={handleUpdateNode} handleAddTree={handleAddTree} setNewNodeInfo={setNewNodeInfo} newNodeInfo={newNodeInfo} isAddingNewNode={isAddingNewNode} />}
       </div>
     </AppContext.Provider>
   );
