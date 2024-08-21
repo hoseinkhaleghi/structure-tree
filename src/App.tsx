@@ -74,16 +74,24 @@ function App() {
   const handleContextMenuClick = (actionKey: any) => async () => {
     switch (actionKey) {
       case "Add":
-        const max = findMaxKey(treeData[0]); // شروع با ریشه
+        const max = findMaxKey(treeData[0]);
         setMaxKey(max);
-        const newInfo = { title: '', key: (maxKey + 1).toString(), users: [], accesses: [],children:[],hierarchy:[...selectedInfo.hierarchy],parentKey:selectedInfo.key };
+        const newInfo = {
+          title: '',
+          key: (max + 1).toString(),
+          users: [],
+          accesses: [],
+          children: [],
+          hierarchy: [...selectedInfo.hierarchy],
+          parentKey: selectedInfo.key,
+        };
         const lastNumber = Math.max(...selectedInfo.hierarchy.map(Number));
         newInfo.hierarchy.push((lastNumber + 1).toString());
         setNewNodeInfo(newInfo);
         setIsAddingNewNode(true);
         setShowEdit(true);
         setSelectedInfo(newInfo);
-        break;
+          break;
       case "Delete":
         setTreeData((prevResult: any) => {
           return deleteEmptyChildren(prevResult, selectedNodeIdString);
@@ -204,29 +212,22 @@ function App() {
     });
   };
 
-  // const handleAddTree = () => {
-  //   if (selectedInfo && newNodeInfo) {
-  //     addNewNode(selectedInfo.key, newNodeInfo);
-  //     setShowEdit(false); // بستن فرم بعد از ثبت
-  //   }
-  // };
   const handleAddTree = () => {
-    if (newNodeInfo) {
+    if (newNodeInfo && newNodeInfo.title) {
       addNewNode(newNodeInfo.parentKey, newNodeInfo);
-      setShowEdit(false); // بستن فرم بعد از ثبت
-      // setNewNodeInfo({}); // ریست کردن اطلاعات نود جدید
+      setShowEdit(false); // بستن فرم بعد از اضافه کردن نود
+      setNewNodeInfo({}); // پاک کردن اطلاعات نود جدید پس از اضافه کردن
     }
-  };
-  
+  };  
   const handleUpdateNode = (key: string, newData: any) => {
     setTreeData((prevData: any) => {
       const updateNode = (data: any) => {
         return data.map((node: { key: string; children: any; }) => {
           if (node.key === key) {
-            return { ...node, ...newData }; // بروزرسانی اطلاعات نود
+            return { ...node, ...newData }; 
           }
           if (node.children) {
-            return { ...node, children: updateNode(node.children) }; // بروزرسانی فرزندان
+            return { ...node, children: updateNode(node.children) };
           }
           return node;
         });
@@ -240,7 +241,7 @@ function App() {
   console.log("new",newNodeInfo)
   console.log("add",isAddingNewNode)
   console.log("max",maxKey,typeof maxKey)
-
+  console.log("SelectedNodeKey" , selectedNodeId)
   return (
     <AppContext.Provider
       value={{

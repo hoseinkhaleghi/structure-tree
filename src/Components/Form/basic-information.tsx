@@ -2,26 +2,37 @@ import { Form, Input } from "antd";
 import React, { useEffect } from "react";
 import UserAutoComplete from "./user-autocomplete";
 import AntTable from "../Table";
+
 interface Props {
   initialValue?: any;
-  // newNodeInfo:any;
-  // isAddingNewNode:boolean;
+  newNodeInfo: any;
+  isAddingNewNode: boolean;
+  setNewNodeInfo:any;
   form: any; // اضافه کردن props برای فرم
 }
-function BasicInformation({ initialValue, form }: Props) {
+
+function BasicInformation({ initialValue, form, isAddingNewNode, newNodeInfo ,setNewNodeInfo }: Props) {
   useEffect(() => {
-    if (initialValue) {
-      form.setFieldsValue({
-        title: initialValue.title || '',
-        code: initialValue.key || '',
-        users: initialValue.users?.map((user: {
-          isDefault: any; title: any; 
-}) => [user.title , user.isDefault]) || [],
-      });
-    }
-  }, [initialValue, form]);
+    const values = isAddingNewNode ? newNodeInfo : initialValue;
+    form.setFieldsValue({
+      title: values.title || '',
+      code: values.key || '',
+      users: values.users?.map((user: { isDefault: any; title: any; }) => [user.title, user.isDefault]) || [],
+    });
+  }, [initialValue, form, newNodeInfo, isAddingNewNode]);
+
+  // ذخیره اطلاعات وارد شده توسط کاربر در فرم
+  const handleFormChange = () => {
+    const values = form.getFieldsValue();
+    setNewNodeInfo((prev: any) => ({
+      ...prev,
+      ...values,
+      
+    }));
+  };
+
   return (
-    <Form form={form}>
+    <Form form={form} onChange={isAddingNewNode ? handleFormChange : undefined}>
       <Form.Item name="title" label="عنوان" labelCol={{ span: 2 }}>
         <Input />
       </Form.Item>
@@ -32,9 +43,10 @@ function BasicInformation({ initialValue, form }: Props) {
         <UserAutoComplete />
       </Form.Item>
       <Form.Item name="title" label="دسترسی ها" labelCol={{ span: 2 }}>
-        <AntTable initialValue={initialValue?.users || []} /> 
+        <AntTable initialValue={initialValue?.users || []} />
       </Form.Item>
     </Form>
   );
 }
+
 export default BasicInformation;

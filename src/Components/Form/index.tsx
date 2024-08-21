@@ -4,24 +4,30 @@ import ActionBar from '../ActionBar';
 import Accesses from './accesses';
 import BasicInformation from './basic-information';
 import { useEffect } from 'react';
+
 interface Props {
   item: any;
   updateNode: (key: string, data: any) => void;
   handleAddTree: () => void;
-  setNewNodeInfo:any;
-  newNodeInfo:any;
-  isAddingNewNode:boolean;
+  setNewNodeInfo: any;
+  newNodeInfo: any;
+  isAddingNewNode: boolean;
 }
-function Form({ item, updateNode, handleAddTree,setNewNodeInfo,newNodeInfo,isAddingNewNode }: Props) {
+
+function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, isAddingNewNode }: Props) {
   const [form] = AntForm.useForm();
 
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
-      if (item.key) {
-        updateNode(item.key, values); // بروزرسانی نود با مقادیر جدید
-      } else {
+      if (isAddingNewNode) {
+        setNewNodeInfo((prevInfo: any) => ({
+          ...prevInfo,
+          ...values,
+        }));
         handleAddTree(); // اضافه کردن نود جدید
+      } else {
+        updateNode(item.key, values); // بروزرسانی نود با مقادیر جدید
       }
     } catch (error) {
       console.error('Validation Failed:', error);
@@ -34,17 +40,15 @@ function Form({ item, updateNode, handleAddTree,setNewNodeInfo,newNodeInfo,isAdd
         title: newNodeInfo.title || '',
         code: newNodeInfo.key || '',
         users: newNodeInfo.users?.map((user: { title: any; }) => user) || [],
-      }
-      );
-    }else {
+      });
+    } else {
       form.setFieldsValue({
         title: item.title || '',
         code: item.key || '',
         users: item.users?.map((user: { title: any; }) => user) || [],
-      }
-      );
+      });
     }
-  }, [item, form,isAddingNewNode,newNodeInfo]);
+  }, [item, form, isAddingNewNode, newNodeInfo]);
 
   return (
     <div className='detail'>
@@ -52,7 +56,7 @@ function Form({ item, updateNode, handleAddTree,setNewNodeInfo,newNodeInfo,isAdd
         <Tabs>
           <Tabs.TabPane tab="اطلاعات اصلی" key="item-1">
             <div className='form-content'>
-              <BasicInformation initialValue={item} form={form} />
+              <BasicInformation initialValue={item} newNodeInfo={newNodeInfo} isAddingNewNode={isAddingNewNode} setNewNodeInfo={setNewNodeInfo} form={form} />
             </div>
           </Tabs.TabPane>
           <Tabs.TabPane tab="دسترسی ها" key="item-2">
@@ -65,16 +69,11 @@ function Form({ item, updateNode, handleAddTree,setNewNodeInfo,newNodeInfo,isAdd
         </Tabs>
       </div>
       <ActionBar actions={[]} />
-      {isAddingNewNode ?<Button type="primary" onClick={handleAddTree}>
-        افزودن
-      </Button> :
       <Button type="primary" onClick={handleSave}>
-       ذخیره
-      </Button>}
-      {/* <Button type="primary" onClick={handleSave}>
-        {!isAddingNewNode ? 'ذخیره' : 'افزودن'} 
-      </Button> */}
+        {isAddingNewNode ? 'افزودن' : 'ذخیره'}
+      </Button>
     </div>
   );
 }
+
 export default Form;

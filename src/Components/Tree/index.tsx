@@ -65,16 +65,6 @@ const TreeExtended = ({
   const titleRenderer = (node: NodeType) => {
     return <Node node={node} handleContextMenuClick={handleContextMenuClick} />;
   };
-  // const handleNodeSelect = (node: any, info: any) => {
-  //   if (!isAddingNewNode) { 
-  //     setSelectedSearchResult(info);
-  //     setSelectedNodeKey(node);
-  //     setSelectedInfo(info.node);
-  //     setShowEdit(true);
-  //     setNewNodeInfo(null);
-  //   }
-  //   setIsAddingNewNode(false);
-  // };
   const handleNodeSelect = (node: any, info: any) => {
     if (isAddingNewNode) {
         setIsAddingNewNode(false); // برای پایان دادن به فرآیند اضافه کردن نود جدید
@@ -86,7 +76,6 @@ const TreeExtended = ({
         // setNewNodeInfo(null); // پاک کردن newNodeInfo بعد از انتخاب نود
     }
 };
-
   return (
     <div className="tree-wrap">
       <Search
