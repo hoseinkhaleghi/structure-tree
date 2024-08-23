@@ -24,7 +24,6 @@ const TreeExtended = ({
   setShowEdit,
   selectedInfo,
   setSelectedSearchResult,
-  setNewNodeInfo,
   isAddingNewNode,
   setIsAddingNewNode,
 }: Props) => {

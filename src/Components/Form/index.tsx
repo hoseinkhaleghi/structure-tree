@@ -24,15 +24,15 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
       const updatedData = {
         ...values,
         accesses,
-        users: newNodeInfo.users || item.users, // Ensure that users from `newNodeInfo` are merged with other updates
+        users: isAddingNewNode ? newNodeInfo.users : item.users,
       };
-
+  
       if (isAddingNewNode) {
         setNewNodeInfo((prevInfo: any) => ({
           ...prevInfo,
           ...updatedData,
         }));
-        handleAddTree(); // Add new node
+        handleAddTree(); // نود جدید را اضافه کنید
       } else {
         updateNode(item.key, updatedData);
       }
@@ -40,6 +40,7 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
       console.error('Validation Failed:', error);
     }
   };
+  
 
   useEffect(() => {
     if (isAddingNewNode) {

@@ -32,12 +32,18 @@ function Accesses({ initialValue, onAccessesChange }: Props) {
 
   useEffect(() => {
     fetchAccessList();
-  }, [initialValue]);
-
-  const onChange = (checkedValues: any) => {
+  }, []);
+  
+  useEffect(() => {
+    if (initialValue && initialValue.accesses) {
+      setCheckedList(initialValue.accesses);
+    }
+  }, [initialValue.accesses]);
+  
+const onChange = (checkedValues: any) => {
     setCheckedList(checkedValues);
-    onAccessesChange(checkedValues);  // اطلاع دادن از تغییرات به والدین
-  };
+    onAccessesChange(checkedValues);
+};
 
   return (
     <>

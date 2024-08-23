@@ -12,36 +12,51 @@ interface Props {
   form: any;
 }
 
-function BasicInformation({ initialValue, form, isAddingNewNode, newNodeInfo, setNewNodeInfo }: Props) {
+function BasicInformation({
+  initialValue,
+  form,
+  isAddingNewNode,
+  newNodeInfo,
+  setNewNodeInfo,
+}: Props) {
   const [users, setUsers] = useState(initialValue.users);
-  useEffect(()=>{if (isAddingNewNode) {
-    setUsers([])
-  }else setUsers(initialValue.users)
-},[initialValue.users, isAddingNewNode])
+  useEffect(() => {
+    if (isAddingNewNode) {
+      setUsers([]);
+    } else {
+      setUsers(initialValue.users);
+    }
+  }, [initialValue.users, isAddingNewNode]);
 
   useEffect(() => {
     const values = isAddingNewNode ? newNodeInfo : initialValue;
     form.setFieldsValue({
-      title: values.title || '',
-      code: values.key || '',
-      users: values.users?.map((user: { isDefault: boolean; title: string }) => [user.title, user.isDefault]) || [],
+      title: values.title || "",
+      code: values.key || "",
+      users:
+        values.users?.map((user: { isDefault: boolean; title: string }) => [
+          user.title,
+          user.isDefault,
+        ]) || [],
     });
   }, [initialValue, form, newNodeInfo, isAddingNewNode]);
 
   const handleUserUpdate = (updatedUsers: any[]) => {
-      setUsers(updatedUsers);
+    setUsers(updatedUsers);
+    if (isAddingNewNode) {
       setNewNodeInfo((prev: any) => ({
         ...prev,
         users: updatedUsers,
-      })); // Also update newNodeInfo to keep users consistent
-    
+      }));
+    } else {
+      initialValue.users = updatedUsers;
+    }
   };
 
   const handleAddUser = (newUser: { label: string; value: string }) => {
-  
-      const updatedUsers = [...users, { title: newUser.label, isDefault: false }];
-      setUsers(updatedUsers);
-      handleUserUpdate(updatedUsers); 
+    const updatedUsers = [...users, { title: newUser.label, isDefault: false }];
+    setUsers(updatedUsers);
+    handleUserUpdate(updatedUsers);
   };
 
   return (
@@ -53,12 +68,16 @@ function BasicInformation({ initialValue, form, isAddingNewNode, newNodeInfo, se
         <Input />
       </Form.Item>
       <Form.Item name="users" label="کاربران" labelCol={{ span: 2 }}>
-        <UserAutoComplete onAddUser={handleAddUser}  />
-        <AntTable initialValue={initialValue.users || []} onUserUpdate={handleUserUpdate} setUsers={setUsers} users={users}/>
+        <UserAutoComplete onAddUser={handleAddUser} />
+        <AntTable
+          initialValue={initialValue.users || []}
+          onUserUpdate={handleUserUpdate}
+          setUsers={setUsers}
+          users={users}
+        />
       </Form.Item>
     </Form>
   );
 }
-
 
 export default BasicInformation;
