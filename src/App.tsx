@@ -236,12 +236,12 @@ function App() {
     });
   };
 
-  console.log("tree",treeData)
-  console.log("sel",selectedInfo)
-  console.log("new",newNodeInfo)
-  console.log("add",isAddingNewNode)
-  console.log("max",maxKey,typeof maxKey)
-  console.log("SelectedNodeKey" , selectedNodeId)
+  // console.log("tree",treeData)
+  // console.log("sel",selectedInfo)
+  // console.log("new",newNodeInfo)
+  // console.log("add",isAddingNewNode)
+  // console.log("max",maxKey,typeof maxKey)
+  // console.log("SelectedNodeKey" , selectedNodeId)
   return (
     <AppContext.Provider
       value={{

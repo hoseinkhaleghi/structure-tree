@@ -1,9 +1,9 @@
-import { Form as AntForm, Input, Tabs, Button } from 'antd';
+import { Form as AntForm, Tabs, Button } from 'antd';
 import ErrorBoundry from '../../ErrorBoundry';
 import ActionBar from '../ActionBar';
 import Accesses from './accesses';
 import BasicInformation from './basic-information';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   item: any;
@@ -16,18 +16,25 @@ interface Props {
 
 function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, isAddingNewNode }: Props) {
   const [form] = AntForm.useForm();
+  const [accesses, setAccesses] = useState<string[]>(item.accesses || []);
 
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
+      const updatedData = {
+        ...values,
+        accesses,
+        users: newNodeInfo.users || item.users, // Ensure that users from `newNodeInfo` are merged with other updates
+      };
+
       if (isAddingNewNode) {
         setNewNodeInfo((prevInfo: any) => ({
           ...prevInfo,
-          ...values,
+          ...updatedData,
         }));
-        handleAddTree(); // اضافه کردن نود جدید
+        handleAddTree(); // Add new node
       } else {
-        updateNode(item.key, values); // بروزرسانی نود با مقادیر جدید
+        updateNode(item.key, updatedData);
       }
     } catch (error) {
       console.error('Validation Failed:', error);
@@ -39,13 +46,13 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
       form.setFieldsValue({
         title: newNodeInfo.title || '',
         code: newNodeInfo.key || '',
-        users: newNodeInfo.users?.map((user: { title: any; }) => user) || [],
+        users: newNodeInfo.users?.map((user: { title: any }) => user) || [],
       });
     } else {
       form.setFieldsValue({
         title: item.title || '',
         code: item.key || '',
-        users: item.users?.map((user: { title: any; }) => user) || [],
+        users: item.users?.map((user: { title: any }) => user) || [],
       });
     }
   }, [item, form, isAddingNewNode, newNodeInfo]);
@@ -62,7 +69,7 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
           <Tabs.TabPane tab="دسترسی ها" key="item-2">
             <div className='form-content'>
               <ErrorBoundry>
-                <Accesses initialValue={item} />
+                <Accesses initialValue={item} onAccessesChange={setAccesses} />
               </ErrorBoundry>
             </div>
           </Tabs.TabPane>

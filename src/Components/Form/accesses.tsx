@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getAccessList } from '../../transportLayer';
 import { Checkbox } from 'antd';
 
@@ -10,9 +9,10 @@ interface Access {
 
 interface Props {
   initialValue?: any;
+  onAccessesChange: (updatedAccesses: string[]) => void;
 }
 
-function Accesses({ initialValue }: Props) {
+function Accesses({ initialValue, onAccessesChange }: Props) {
   const [options, setOptions] = useState<Access[]>([]);
   const [checkedList, setCheckedList] = useState<string[]>([]);
 
@@ -20,6 +20,11 @@ function Accesses({ initialValue }: Props) {
     try {
       const result: Access[] = await getAccessList();
       setOptions(result);
+
+      // تنظیم مقادیر چک‌شده با استفاده از initialValue.accesses
+      if (initialValue && initialValue.accesses) {
+        setCheckedList(initialValue.accesses);
+      }
     } catch (error) {
       console.error("Error fetching access list:", error);
     }
@@ -27,10 +32,11 @@ function Accesses({ initialValue }: Props) {
 
   useEffect(() => {
     fetchAccessList();
-  }, []);
+  }, [initialValue]);
 
   const onChange = (checkedValues: any) => {
     setCheckedList(checkedValues);
+    onAccessesChange(checkedValues);  // اطلاع دادن از تغییرات به والدین
   };
 
   return (
@@ -47,4 +53,5 @@ function Accesses({ initialValue }: Props) {
     </>
   );
 }
+
 export default Accesses;
