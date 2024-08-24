@@ -12,32 +12,32 @@ interface Props {
   form: any;
 }
 
-function BasicInformation({
+const BasicInformation: React.FC<Props> = ({
   initialValue,
   form,
   isAddingNewNode,
   newNodeInfo,
   setNewNodeInfo,
-}: Props) {
-  const [users, setUsers] = useState(initialValue.users);
+}) => {
+  const [users, setUsers] = useState(initialValue?.users || []);
+  
   useEffect(() => {
     if (isAddingNewNode) {
       setUsers([]);
     } else {
-      setUsers(initialValue.users);
+      setUsers(initialValue?.users || []);
     }
-  }, [initialValue.users, isAddingNewNode]);
+  }, [initialValue?.users, isAddingNewNode]);
 
   useEffect(() => {
     const values = isAddingNewNode ? newNodeInfo : initialValue;
     form.setFieldsValue({
       title: values.title || "",
       code: values.key || "",
-      users:
-        values.users?.map((user: { isDefault: boolean; title: string }) => [
-          user.title,
-          user.isDefault,
-        ]) || [],
+      users: values.users?.map((user: { isDefault: boolean; title: string }) => [
+        user.title,
+        user.isDefault,
+      ]) || [],
     });
   }, [initialValue, form, newNodeInfo, isAddingNewNode]);
 
@@ -68,16 +68,18 @@ function BasicInformation({
         <Input />
       </Form.Item>
       <Form.Item name="users" label="کاربران" labelCol={{ span: 2 }}>
-        <UserAutoComplete onAddUser={handleAddUser} />
-        <AntTable
-          initialValue={initialValue.users || []}
-          onUserUpdate={handleUserUpdate}
-          setUsers={setUsers}
-          users={users}
-        />
+        <div>
+          <UserAutoComplete onAddUser={handleAddUser} />
+          <AntTable
+            initialValue={initialValue?.users || []}
+            onUserUpdate={handleUserUpdate}
+            setUsers={setUsers}
+            users={users}
+          />
+        </div>
       </Form.Item>
     </Form>
   );
-}
+};
 
 export default BasicInformation;

@@ -4,14 +4,14 @@ import { MdDelete } from "react-icons/md";
 interface AntTableProps {
   initialValue: any[];
   onUserUpdate: (updatedUsers: any[]) => void; // New prop for updating users
-  setUsers:any;
-  users:any;
+  setUsers: any;
+  users: any;
 }
 
-const AntTable = ({ initialValue, onUserUpdate,setUsers,users }: AntTableProps) => {
-    // const [users, setUsers] = useState(initialValue);
-  useEffect(() => {setUsers(initialValue)
-  }, [initialValue,setUsers]);
+const AntTable: React.FC<AntTableProps> = ({ initialValue, onUserUpdate, setUsers, users }) => {
+  useEffect(() => {
+    setUsers(initialValue);
+  }, [initialValue, setUsers]);
 
   const handleDelete = (index: number) => {
     const updatedUsers = users.filter((_: any, i: number) => i !== index);
@@ -39,7 +39,7 @@ const AntTable = ({ initialValue, onUserUpdate,setUsers,users }: AntTableProps) 
           </tr>
         </thead>
         <tbody>
-          {users.map((item :any, index:any) => (
+          {users.map((item: any, index: any) => (
             <tr key={index}>
               <td onClick={() => handleDelete(index)}>
                 <MdDelete />

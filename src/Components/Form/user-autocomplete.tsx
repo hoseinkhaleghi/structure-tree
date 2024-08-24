@@ -30,7 +30,6 @@ const UserAutoComplete: React.FC<UserAutoCompleteProps> = ({ onAddUser }) => {
     const user = orginalOptions.current.find((o: any) => o.value === data);
     setSelectedUser(user);
   };
-  // console.log("selectedUser",selectedUser)
 
   const handleAdd = () => {
     if (selectedUser) {

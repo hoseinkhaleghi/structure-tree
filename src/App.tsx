@@ -6,7 +6,6 @@ import ExtendedTree from "./Components/Tree";
 import { getNodes } from "./transportLayer";
 import { deleteEmptyChildren } from "./Components/Util/utils";
 import { NodeType } from "./types";
-// import { arrayBuffer } from "stream/consumers";
 interface Type {
   key: string;
   children?: Type[];
@@ -36,7 +35,7 @@ function App() {
   useEffect(() => {
     if (paste?.key && clipBoard?.key) {
       const replaceTree = handleUpdateTree(treeData, clipBoard.key, paste.key);
-      setTreeData((prevState: any) => [...prevState, replaceTree]);
+      setTreeData((prevState: any) => [...prevState, replaceTree]);console.log("paste",paste)
     }
   }, [paste]);
 
@@ -81,12 +80,15 @@ function App() {
 
       case "Paste":
         if (clipBoard.length > 0) {
+          const lastNumber = Math.max(...selectedInfo.hierarchy.map(Number));
+          clipBoard.hierarchy.push((lastNumber + 1).toString());
           setSelectedInfo((prevState: any) => ({
             ...prevState,
             children: clipBoard,
           }));
         }
         setPaste(selectedInfo);
+        
         break;
 
       case "Cut":
@@ -140,7 +142,6 @@ function App() {
           }
         }
       }
-
       return null;
     }
     findAndMove(nodes, sourceKey, destinationKey);
@@ -151,31 +152,26 @@ function App() {
   //////////////////////////////////// Add
 
   const addNewNode = (parentKey: string, newNodeInfo: NodeType) => {
-    const updatedTreeData = treeData.map(
-      (node: { key: string; children: any }) => {
-        if (node.key === parentKey) {
-          return {
-            ...node,
-            children: [...node.children, newNodeInfo],
-          };
-        }
-        // در صورت وجود فرزندان، بررسی فرزندان برای پیدا کردن parentKey
-        if (node.children) {
-          return {
-            ...node,
-            children: addNewNodeToChildren(
-              node.children,
-              parentKey,
-              newNodeInfo
-            ),
-          };
-        }
-        return node;
+    console.log('Adding new node to parentKey:', parentKey);
+    const updatedTreeData = treeData.map((node: { key: string; children: any }) => {
+      if (node.key === parentKey) {
+        console.log('Found parent node:', node);
+        return {
+          ...node,
+          children: [...node.children, newNodeInfo],
+        };
       }
-    );
-    setTreeData(updatedTreeData);
+      if (node.children) {
+        return {
+          ...node,
+          children: addNewNodeToChildren(node.children, parentKey, newNodeInfo),
+        };
+      }
+      return node;
+    });
+    return updatedTreeData;
   };
-
+  
   const addNewNodeToChildren = (
     children: any,
     parentKey: any,
@@ -183,6 +179,7 @@ function App() {
   ) => {
     return children.map((child: { key: any; children: any }) => {
       if (child.key === parentKey) {
+        console.log('Adding new node to child:', child);
         return {
           ...child,
           children: [...child.children, newNodeInfo],
@@ -191,25 +188,26 @@ function App() {
       if (child.children) {
         return {
           ...child,
-          children: addNewNodeToChildren(
-            child.children,
-            parentKey,
-            newNodeInfo
-          ),
+          children: addNewNodeToChildren(child.children, parentKey, newNodeInfo),
         };
       }
       return child;
     });
   };
-
+  
+  
   const handleAddTree = () => {
     if (newNodeInfo && newNodeInfo.title) {
-      addNewNode(newNodeInfo.parentKey, newNodeInfo);
+      console.log('Adding new node with info:', newNodeInfo);
+      const updatedTreeData = addNewNode(newNodeInfo.parentKey, newNodeInfo);
+      console.log('Tree data after adding node:', updatedTreeData);
+      setTreeData(updatedTreeData);
       setShowEdit(false);
       setNewNodeInfo({});
     }
   };
-  const handleUpdateNode = (key: string, newData: any) => {
+      
+    const handleUpdateNode = (key: string, newData: any) => {
     setTreeData((prevData: any) => {
       const updateNode = (data: any) => {
         return data.map((node: { key: string; children: any }) => {
@@ -226,7 +224,7 @@ function App() {
     });
   };
 
-  // console.log("tree",treeData)
+  console.log("tree",treeData)
   // console.log("sel",selectedInfo)
   // console.log("new",newNodeInfo)
   // console.log("add",isAddingNewNode)

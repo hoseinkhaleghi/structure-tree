@@ -14,7 +14,7 @@ interface Props {
   isAddingNewNode: boolean;
 }
 
-function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, isAddingNewNode }: Props) {
+const Form: React.FC<Props> = ({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, isAddingNewNode }) => {
   const [form] = AntForm.useForm();
   const [accesses, setAccesses] = useState<string[]>(item.accesses || []);
 
@@ -26,7 +26,7 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
         accesses,
         users: isAddingNewNode ? newNodeInfo.users : item.users,
       };
-  
+
       if (isAddingNewNode) {
         setNewNodeInfo((prevInfo: any) => ({
           ...prevInfo,
@@ -40,7 +40,6 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
       console.error('Validation Failed:', error);
     }
   };
-  
 
   useEffect(() => {
     if (isAddingNewNode) {
@@ -61,20 +60,36 @@ function Form({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, is
   return (
     <div className='detail'>
       <div>
-        <Tabs>
-          <Tabs.TabPane tab="اطلاعات اصلی" key="item-1">
-            <div className='form-content'>
-              <BasicInformation initialValue={item} newNodeInfo={newNodeInfo} isAddingNewNode={isAddingNewNode} setNewNodeInfo={setNewNodeInfo} form={form} />
-            </div>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="دسترسی ها" key="item-2">
-            <div className='form-content'>
-              <ErrorBoundry>
-                <Accesses initialValue={item} onAccessesChange={setAccesses} />
-              </ErrorBoundry>
-            </div>
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs
+          items={[
+            {
+              key: "item-1",
+              label: "اطلاعات اصلی",
+              children: (
+                <div className='form-content'>
+                  <BasicInformation
+                    initialValue={item}
+                    newNodeInfo={newNodeInfo}
+                    isAddingNewNode={isAddingNewNode}
+                    setNewNodeInfo={setNewNodeInfo}
+                    form={form}
+                  />
+                </div>
+              ),
+            },
+            {
+              key: "item-2",
+              label: "دسترسی ها",
+              children: (
+                <div className='form-content'>
+                  <ErrorBoundry>
+                    <Accesses initialValue={item} onAccessesChange={setAccesses} />
+                  </ErrorBoundry>
+                </div>
+              ),
+            },
+          ]}
+        />
       </div>
       <ActionBar actions={[]} />
       <Button type="primary" onClick={handleSave}>
