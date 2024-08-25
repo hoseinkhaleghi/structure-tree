@@ -13,11 +13,11 @@ interface Props {
 }
 
 const BasicInformation: React.FC<Props> = ({
-  initialValue,
-  form,
-  isAddingNewNode,
-  newNodeInfo,
-  setNewNodeInfo,
+  initialValue=[],
+  form=[],
+  isAddingNewNode=false,
+  newNodeInfo=[],
+  setNewNodeInfo= () => {},
 }) => {
   const [users, setUsers] = useState(initialValue?.users || []);
   

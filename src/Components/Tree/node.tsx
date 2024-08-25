@@ -11,7 +11,7 @@ interface Props {
   handleContextMenuClick: (key: string) => void;
 }
 
-function Node({ node, handleContextMenuClick }: Props) {
+function Node({ node, handleContextMenuClick = () => {} }: Props) {
   return (
     <div>
       <ContextMenuTriggerEx id={node.key} title={node.title} />

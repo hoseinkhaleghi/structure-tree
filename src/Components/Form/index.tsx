@@ -1,9 +1,9 @@
-import { Form as AntForm, Tabs, Button } from 'antd';
-import ErrorBoundry from '../../ErrorBoundry';
-import ActionBar from '../ActionBar';
-import Accesses from './accesses';
-import BasicInformation from './basic-information';
-import { useEffect, useState } from 'react';
+import { Form as AntForm, Tabs, Button } from "antd";
+import ErrorBoundry from "../../ErrorBoundry";
+import ActionBar from "../ActionBar";
+import Accesses from "./accesses";
+import BasicInformation from "./basic-information";
+import { useEffect, useState } from "react";
 
 interface Props {
   item: any;
@@ -14,7 +14,14 @@ interface Props {
   isAddingNewNode: boolean;
 }
 
-const Form: React.FC<Props> = ({ item, updateNode, handleAddTree, setNewNodeInfo, newNodeInfo, isAddingNewNode }) => {
+const Form: React.FC<Props> = ({
+  item = [],
+  updateNode = () => {},
+  handleAddTree = () => {},
+  setNewNodeInfo = () => {},
+  newNodeInfo = {},
+  isAddingNewNode = false,
+}) => {
   const [form] = AntForm.useForm();
   const [accesses, setAccesses] = useState<string[]>(item.accesses || []);
 
@@ -32,33 +39,38 @@ const Form: React.FC<Props> = ({ item, updateNode, handleAddTree, setNewNodeInfo
           ...prevInfo,
           ...updatedData,
         }));
-        handleAddTree(); // نود جدید را اضافه کنید
       } else {
         updateNode(item.key, updatedData);
       }
     } catch (error) {
-      console.error('Validation Failed:', error);
+      console.error("Validation Failed:", error);
     }
   };
 
   useEffect(() => {
     if (isAddingNewNode) {
       form.setFieldsValue({
-        title: newNodeInfo.title || '',
-        code: newNodeInfo.key || '',
+        title: newNodeInfo.title || "",
+        code: newNodeInfo.key || "",
         users: newNodeInfo.users?.map((user: { title: any }) => user) || [],
       });
     } else {
       form.setFieldsValue({
-        title: item.title || '',
-        code: item.key || '',
+        title: item.title || "",
+        code: item.key || "",
         users: item.users?.map((user: { title: any }) => user) || [],
       });
     }
   }, [item, form, isAddingNewNode, newNodeInfo]);
 
+  useEffect(() => {
+    if (isAddingNewNode && newNodeInfo.title) {
+      handleAddTree();
+    }
+  }, [newNodeInfo, isAddingNewNode, handleAddTree]);
+
   return (
-    <div className='detail'>
+    <div className="detail">
       <div>
         <Tabs
           items={[
@@ -66,7 +78,7 @@ const Form: React.FC<Props> = ({ item, updateNode, handleAddTree, setNewNodeInfo
               key: "item-1",
               label: "اطلاعات اصلی",
               children: (
-                <div className='form-content'>
+                <div className="form-content">
                   <BasicInformation
                     initialValue={item}
                     newNodeInfo={newNodeInfo}
@@ -81,9 +93,12 @@ const Form: React.FC<Props> = ({ item, updateNode, handleAddTree, setNewNodeInfo
               key: "item-2",
               label: "دسترسی ها",
               children: (
-                <div className='form-content'>
+                <div className="form-content">
                   <ErrorBoundry>
-                    <Accesses initialValue={item} onAccessesChange={setAccesses} />
+                    <Accesses
+                      initialValue={item}
+                      onAccessesChange={setAccesses}
+                    />
                   </ErrorBoundry>
                 </div>
               ),
@@ -93,10 +108,10 @@ const Form: React.FC<Props> = ({ item, updateNode, handleAddTree, setNewNodeInfo
       </div>
       <ActionBar actions={[]} />
       <Button type="primary" onClick={handleSave}>
-        {isAddingNewNode ? 'افزودن' : 'ذخیره'}
+        {isAddingNewNode ? "افزودن" : "ذخیره"}
       </Button>
     </div>
   );
-}
+};
 
 export default Form;

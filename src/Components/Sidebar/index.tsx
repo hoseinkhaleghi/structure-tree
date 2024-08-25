@@ -4,7 +4,7 @@ interface Props {
 	children: JSX.Element[] | JSX.Element
 }
 
-const Sidebar = ({children}: Props) => {
+const Sidebar = ({children=[]}: Props) => {
 	return (
 		<div className='sidebar' style={{width: '25%'}}>
 			{children}

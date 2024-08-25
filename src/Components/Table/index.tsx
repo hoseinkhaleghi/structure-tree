@@ -8,7 +8,7 @@ interface AntTableProps {
   users: any;
 }
 
-const AntTable: React.FC<AntTableProps> = ({ initialValue, onUserUpdate, setUsers, users }) => {
+const AntTable: React.FC<AntTableProps> = ({ initialValue=[], onUserUpdate= () => {}, setUsers= () => {}, users=[] }) => {
   useEffect(() => {
     setUsers(initialValue);
   }, [initialValue, setUsers]);

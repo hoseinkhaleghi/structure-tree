@@ -14,18 +14,19 @@ interface Props {
   setSelectedSearchResult: any;
   selectedSearchResult: any;
   setNewNodeInfo: any;
-  isAddingNewNode:any;
-  setIsAddingNewNode:any;
+  isAddingNewNode: any;
+  setIsAddingNewNode: any;
 }
+
 const TreeExtended = ({
-  setSelectedNodeKey,
-  handleContextMenuClick,
-  setSelectedInfo,
-  setShowEdit,
-  selectedInfo,
-  setSelectedSearchResult,
-  isAddingNewNode,
-  setIsAddingNewNode,
+  setSelectedNodeKey = () => {},
+  handleContextMenuClick = () => {},
+  setSelectedInfo = () => {},
+  setShowEdit = () => {},
+  selectedInfo = [],
+  setSelectedSearchResult = () => {},
+  isAddingNewNode = false,
+  setIsAddingNewNode = () => {},
 }: Props) => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);

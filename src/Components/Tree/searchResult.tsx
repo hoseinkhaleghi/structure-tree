@@ -1,4 +1,4 @@
-import { Button, Popover, Tree } from "antd";
+import { Popover, Tree } from "antd";
 import { NodeType } from "../../types";
 import ArrowUpIcon from "../SvgIcons/arrow-up";
 import OrgchartIcon from "../SvgIcons/orgchart";
@@ -15,18 +15,17 @@ interface Props {
 }
 
 function SearchResult({
-  items,
-  searchResultVisible,
-  setSearchResultVisible,
-  setSelectedInfo,
-  setExpandedKeys,
+  items = [],
+  searchResultVisible = false,
+  setSearchResultVisible = () => {},
+  setSelectedInfo = () => {},
+  setExpandedKeys = () => {},
 }: Props) {
   const { treeData } = useContext(AppContext);
-  const [orgChartOpen, setOrgChartOpen] = useState(false);
+  const [orgChartOpen, setOrgChartOpen] = useState<string | null>(null);
   const [selectedNodeKey, setSelectedNodeKey] = useState<string | null>(null);
   const [ancestors, setAncestors] = useState<NodeType[]>([]);
 
-  // Function to find ancestors
   const findAncestors = (nodes: NodeType[], key: string): NodeType[] => {
     let result: NodeType[] = [];
     function search(nodes: NodeType[], targetKey: string) {
@@ -37,7 +36,7 @@ function SearchResult({
         }
         if (node.children) {
           if (search(node.children, targetKey)) {
-            result.unshift(node); // Add parent nodes before the target node
+            result.unshift(node);
             return true;
           }
         }
@@ -47,30 +46,53 @@ function SearchResult({
     search(nodes, key);
     return result;
   };
+
   const handleItemClick = (item: NodeType) => {
     setSelectedInfo(item);
-    // console.log(item);
     setExpandedKeys(item.hierarchy);
-    // selectedSearchResult.selected === true
-    // setSelectedSearchResult((prevState: any) => ({
-    // 	...prevState,
-    // 	selected: true,
-    //   }))
   };
 
   const handleItemClickChart = (item: NodeType) => {
     setSelectedInfo(item);
     setSelectedNodeKey(item.key);
-    const newAncestors = findAncestors(treeData, item.key); // Get ancestors for the selected node
-    setAncestors(newAncestors);
-    setExpandedKeys(newAncestors.map((n) => n.key));
-    setOrgChartOpen(true); // Open the org chart popover on selection
-    console.log(newAncestors);
+    const newAncestors = findAncestors(treeData, item.key);
+    setAncestors(generateUniqueKeys(newAncestors)); // استفاده از کلیدهای یکتا برای نودهای والد
+    setOrgChartOpen(item.key);
   };
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOrgChartOpen(newOpen);
+  const handleOpenChange = (key: string | null) => {
+    if (orgChartOpen === key) {
+      setOrgChartOpen(null);
+    } else {
+      setOrgChartOpen(key);
+    }
   };
+
+  // تابع برای تولید کلیدهای یکتا
+  const generateUniqueKeys = (data: any) => {
+    const seenKeys = new Set();
+    return data.map((item: { key: any; children?: NodeType[] }) => {
+      let uniqueKey = item.key;
+      let counter = 1;
+
+      while (seenKeys.has(uniqueKey)) {
+        uniqueKey = `${item.key}-${counter}`;
+        counter++;
+      }
+
+      seenKeys.add(uniqueKey);
+
+      // تولید کلیدهای یکتا برای فرزندان
+      const childrenWithUniqueKeys = item.children
+        ? generateUniqueKeys(item.children)
+        : undefined;
+
+      return { ...item, key: uniqueKey, children: childrenWithUniqueKeys };
+    });
+  };
+
+  // استفاده از داده‌های یکتا
+  const uniqueItems = generateUniqueKeys(items);
 
   return (
     <div className="search-result" style={{ height: 200, overflow: "auto" }}>
@@ -82,7 +104,7 @@ function SearchResult({
           <ArrowUpIcon />
         </div>
       )}
-      {items.map((item) => (
+      {uniqueItems.map((item: NodeType) => (
         <div
           style={{ display: "flex", justifyContent: "space-between" }}
           key={item.key}
@@ -99,13 +121,13 @@ function SearchResult({
             <Popover
               content={
                 <Tree
-                  treeData={ancestors.length > 0 ? ancestors : []} // Ensure we pass the correct data
+                  treeData={ancestors}
                   selectedKeys={selectedNodeKey ? [selectedNodeKey] : []}
                 />
               }
               trigger="click"
-              open={orgChartOpen}
-              onOpenChange={handleOpenChange}
+              open={orgChartOpen === item.key}
+              onOpenChange={() => handleOpenChange(item.key)}
             >
               <div onClick={() => handleItemClickChart(item)}>
                 <OrgchartIcon />

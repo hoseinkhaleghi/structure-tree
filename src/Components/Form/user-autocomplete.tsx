@@ -6,7 +6,7 @@ interface UserAutoCompleteProps {
   onAddUser: (user: { label: string; value: string }) => void;
 }
 
-const UserAutoComplete: React.FC<UserAutoCompleteProps> = ({ onAddUser }) => {
+const UserAutoComplete: React.FC<UserAutoCompleteProps> = ({ onAddUser= () => {} }) => {
   const orginalOptions = useRef([]) as any;
   const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
   const [selectedUser, setSelectedUser] = useState<{ label: string; value: string } | null>(null);

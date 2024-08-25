@@ -12,7 +12,7 @@ interface Props {
   onAccessesChange: (updatedAccesses: string[]) => void;
 }
 
-function Accesses({ initialValue, onAccessesChange }: Props) {
+function Accesses({ initialValue=[], onAccessesChange= () => {} }: Props) {
   const [options, setOptions] = useState<Access[]>([]);
   const [checkedList, setCheckedList] = useState<string[]>([]);
 
@@ -38,7 +38,7 @@ function Accesses({ initialValue, onAccessesChange }: Props) {
     if (initialValue && initialValue.accesses) {
       setCheckedList(initialValue.accesses);
     }
-  }, [initialValue.accesses]);
+  }, [initialValue, initialValue.accesses]);
   
 const onChange = (checkedValues: any) => {
     setCheckedList(checkedValues);
