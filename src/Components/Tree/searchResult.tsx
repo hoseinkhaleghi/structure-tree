@@ -56,7 +56,12 @@ function SearchResult({
     setSelectedInfo(item);
     setSelectedNodeKey(item.key);
     const newAncestors = findAncestors(treeData, item.key);
-    setAncestors(generateUniqueKeys(newAncestors)); // استفاده از کلیدهای یکتا برای نودهای والد
+
+    if (newAncestors.length > 3) {
+      newAncestors.splice(0, newAncestors.length - 3);
+    }
+
+    setAncestors(generateUniqueKeys(newAncestors)); 
     setOrgChartOpen(item.key);
   };
 
@@ -68,7 +73,6 @@ function SearchResult({
     }
   };
 
-  // تابع برای تولید کلیدهای یکتا
   const generateUniqueKeys = (data: any) => {
     const seenKeys = new Set();
     return data.map((item: { key: any; children?: NodeType[] }) => {
@@ -82,7 +86,6 @@ function SearchResult({
 
       seenKeys.add(uniqueKey);
 
-      // تولید کلیدهای یکتا برای فرزندان
       const childrenWithUniqueKeys = item.children
         ? generateUniqueKeys(item.children)
         : undefined;
@@ -91,7 +94,6 @@ function SearchResult({
     });
   };
 
-  // استفاده از داده‌های یکتا
   const uniqueItems = generateUniqueKeys(items);
 
   return (
@@ -119,11 +121,15 @@ function SearchResult({
             style={{ marginTop: 20, cursor: "pointer", width: 20, height: 20 }}
           >
             <Popover
+              title="مسیر"
               content={
-                <Tree
-                  treeData={ancestors}
-                  selectedKeys={selectedNodeKey ? [selectedNodeKey] : []}
-                />
+                <div>
+                  {ancestors.map((item, index) => (
+                    <div key={index} style={{ paddingRight: `${index * 20}px` }}>
+                      {item.title}
+                    </div>
+                  ))}
+                </div>
               }
               trigger="click"
               open={orgChartOpen === item.key}

@@ -3,12 +3,12 @@ import { MdDelete } from "react-icons/md";
 
 interface AntTableProps {
   initialValue: any[];
-  onUserUpdate: (updatedUsers: any[]) => void; // New prop for updating users
+  onUserUpdate: (updatedUsers: any[]) => void;
   setUsers: any;
   users: any;
 }
 
-const AntTable: React.FC<AntTableProps> = ({ initialValue=[], onUserUpdate= () => {}, setUsers= () => {}, users=[] }) => {
+const AntTable: React.FC<AntTableProps> = ({ initialValue, onUserUpdate= () => {}, setUsers= () => {}, users=[] }) => {
   useEffect(() => {
     setUsers(initialValue);
   }, [initialValue, setUsers]);
@@ -16,7 +16,7 @@ const AntTable: React.FC<AntTableProps> = ({ initialValue=[], onUserUpdate= () =
   const handleDelete = (index: number) => {
     const updatedUsers = users.filter((_: any, i: number) => i !== index);
     setUsers(updatedUsers);
-    onUserUpdate(updatedUsers); // Notify parent about the updated users
+    onUserUpdate(updatedUsers);
   };
 
   const handleDefaultChange = (index: number) => {
@@ -25,7 +25,7 @@ const AntTable: React.FC<AntTableProps> = ({ initialValue=[], onUserUpdate= () =
       isDefault: i === index,
     }));
     setUsers(updatedUsers);
-    onUserUpdate(updatedUsers); // Notify parent about the updated users
+    onUserUpdate(updatedUsers); 
   };
 
   return (
