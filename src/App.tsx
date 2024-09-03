@@ -6,10 +6,10 @@ import ExtendedTree from "./Components/Tree";
 import { getNodes } from "./transportLayer";
 import { deleteEmptyChildren } from "./Components/Util/utils";
 import { NodeType } from "./types";
-interface Type {
-  key: string;
-  children?: Type[];
-}
+// interface Type {
+//   key: string;
+//   children?: Type[];
+// }
 function App() {
   const [showEdit, setShowEdit] = useState(false);
   const [treeData, setTreeData] = useState([]) as any;
@@ -35,7 +35,8 @@ function App() {
   useEffect(() => {
     if (paste?.key && clipBoard?.key) {
       const replaceTree = handleUpdateTree(treeData, clipBoard.key, paste.key);
-      setTreeData((prevState: any) => [...prevState, replaceTree]);console.log("paste",paste)
+      setTreeData((prevState: any) => [...prevState, replaceTree]);
+      console.log("paste", paste);
     }
   }, [paste]);
 
@@ -80,15 +81,16 @@ function App() {
 
       case "Paste":
         if (clipBoard.length > 0) {
-          const lastNumber = Math.max(...selectedInfo.hierarchy.map(Number));
-          clipBoard.hierarchy.push((lastNumber + 1).toString());
+          // const lastNumber = Math.max(...selectedInfo.hierarchy.map(Number));
+          // clipBoard.hierarchy = selectedInfo.hierarchy.push((lastNumber + 1).toString());
+          // clipBoard.hierarchy.push((lastNumber + 1).toString());
           setSelectedInfo((prevState: any) => ({
             ...prevState,
             children: clipBoard,
           }));
         }
         setPaste(selectedInfo);
-        
+
         break;
 
       case "Cut":
@@ -109,7 +111,7 @@ function App() {
     destinationKey: string
   ): NodeType[] => {
     function findAndMove(
-      nodes: Type[],
+      nodes: any,
       sourceKey: string,
       destinationKey: string
     ) {
@@ -119,6 +121,15 @@ function App() {
         if (item.key === sourceKey) {
           nodes.splice(i, 1);
           const destinationItem = findItemByKey(treeData, destinationKey);
+          const destinationItemHierarchy = destinationItem.hierarchy;
+          const maxNumber = Math.max(...destinationItemHierarchy.map(Number));
+          item.hierarchy = [
+            ...destinationItemHierarchy,
+            (maxNumber + 1).toString(),
+          ];
+          item.parentKey = destinationItem.key;
+          console.log("itemh", item.hierarchy, "itemp", item.parentKey);
+
           if (destinationItem?.children) {
             destinationItem.children.push(item);
           } else {
@@ -130,7 +141,8 @@ function App() {
         }
       }
     }
-    function findItemByKey(array: Type[], key: string): Type | null {
+
+    function findItemByKey(array: any, key: string): any | null {
       for (let i = 0; i < array.length; i++) {
         const item = array[i];
         if (item.key === key) {
@@ -144,6 +156,7 @@ function App() {
       }
       return null;
     }
+
     findAndMove(nodes, sourceKey, destinationKey);
 
     return nodes;
@@ -152,26 +165,32 @@ function App() {
   //////////////////////////////////// Add
 
   const addNewNode = (parentKey: string, newNodeInfo: NodeType) => {
-    console.log('Adding new node to parentKey:', parentKey);
-    const updatedTreeData = treeData.map((node: { key: string; children: any }) => {
-      if (node.key === parentKey) {
-        console.log('Found parent node:', node);
-        return {
-          ...node,
-          children: [...node.children, newNodeInfo],
-        };
+    console.log("Adding new node to parentKey:", parentKey);
+    const updatedTreeData = treeData.map(
+      (node: { key: string; children: any }) => {
+        if (node.key === parentKey) {
+          console.log("Found parent node:", node);
+          return {
+            ...node,
+            children: [...node.children, newNodeInfo],
+          };
+        }
+        if (node.children) {
+          return {
+            ...node,
+            children: addNewNodeToChildren(
+              node.children,
+              parentKey,
+              newNodeInfo
+            ),
+          };
+        }
+        return node;
       }
-      if (node.children) {
-        return {
-          ...node,
-          children: addNewNodeToChildren(node.children, parentKey, newNodeInfo),
-        };
-      }
-      return node;
-    });
+    );
     return updatedTreeData;
   };
-  
+
   const addNewNodeToChildren = (
     children: any,
     parentKey: any,
@@ -179,7 +198,7 @@ function App() {
   ) => {
     return children.map((child: { key: any; children: any }) => {
       if (child.key === parentKey) {
-        console.log('Adding new node to child:', child);
+        console.log("Adding new node to child:", child);
         return {
           ...child,
           children: [...child.children, newNodeInfo],
@@ -188,26 +207,29 @@ function App() {
       if (child.children) {
         return {
           ...child,
-          children: addNewNodeToChildren(child.children, parentKey, newNodeInfo),
+          children: addNewNodeToChildren(
+            child.children,
+            parentKey,
+            newNodeInfo
+          ),
         };
       }
       return child;
     });
   };
-  
-  
+
   const handleAddTree = () => {
     if (newNodeInfo && newNodeInfo.title) {
-      console.log('Adding new node with info:', newNodeInfo);
+      console.log("Adding new node with info:", newNodeInfo);
       const updatedTreeData = addNewNode(newNodeInfo.parentKey, newNodeInfo);
-      console.log('Tree data after adding node:', updatedTreeData);
+      console.log("Tree data after adding node:", updatedTreeData);
       setTreeData(updatedTreeData);
       setShowEdit(false);
       setNewNodeInfo({});
     }
   };
-      
-    const handleUpdateNode = (key: string, newData: any) => {
+
+  const handleUpdateNode = (key: string, newData: any) => {
     setTreeData((prevData: any) => {
       const updateNode = (data: any) => {
         return data.map((node: { key: string; children: any }) => {
@@ -224,7 +246,7 @@ function App() {
     });
   };
 
-  console.log("tree",treeData)
+  // console.log("tree",treeData)
   // console.log("sel",selectedInfo)
   // console.log("new",newNodeInfo)
   // console.log("add",isAddingNewNode)

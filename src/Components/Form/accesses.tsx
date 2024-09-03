@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { getAccessList } from '../../transportLayer';
-import { Checkbox } from 'antd';
+import { useEffect, useState } from "react";
+import { getAccessList } from "../../transportLayer";
+import { Checkbox } from "antd";
 
 interface Access {
   label: string;
@@ -12,7 +12,7 @@ interface Props {
   onAccessesChange: (updatedAccesses: string[]) => void;
 }
 
-function Accesses({ initialValue=[], onAccessesChange= () => {} }: Props) {
+function Accesses({ initialValue = [], onAccessesChange = () => {} }: Props) {
   const [options, setOptions] = useState<Access[]>([]);
   const [checkedList, setCheckedList] = useState<string[]>([]);
 
@@ -33,23 +33,23 @@ function Accesses({ initialValue=[], onAccessesChange= () => {} }: Props) {
   useEffect(() => {
     fetchAccessList();
   }, []);
-  
+
   useEffect(() => {
     if (initialValue && initialValue.accesses) {
       setCheckedList(initialValue.accesses);
     }
   }, [initialValue, initialValue.accesses]);
-  
-const onChange = (checkedValues: any) => {
+
+  const onChange = (checkedValues: any) => {
     setCheckedList(checkedValues);
     onAccessesChange(checkedValues);
-};
+  };
 
   return (
     <>
       <h3>لیست دسترسی‌ها:</h3>
       <Checkbox.Group
-        options={options.map(option => ({
+        options={options.map((option) => ({
           label: option.label,
           value: option.id,
         }))}

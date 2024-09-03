@@ -67,15 +67,15 @@ const TreeExtended = ({
   };
   const handleNodeSelect = (node: any, info: any) => {
     if (isAddingNewNode) {
-        setIsAddingNewNode(false); // برای پایان دادن به فرآیند اضافه کردن نود جدید
+      setIsAddingNewNode(false); // برای پایان دادن به فرآیند اضافه کردن نود جدید
     } else {
-        setSelectedSearchResult(info);
-        setSelectedNodeKey(node);
-        setSelectedInfo(info.node);
-        setShowEdit(true);
-        // setNewNodeInfo(null); // پاک کردن newNodeInfo بعد از انتخاب نود
+      setSelectedSearchResult(info);
+      setSelectedNodeKey(node);
+      setSelectedInfo(info.node);
+      setShowEdit(true);
+      // setNewNodeInfo(null); // پاک کردن newNodeInfo بعد از انتخاب نود
     }
-};
+  };
   return (
     <div className="tree-wrap">
       <Search

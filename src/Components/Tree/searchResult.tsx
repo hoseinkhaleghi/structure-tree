@@ -61,7 +61,7 @@ function SearchResult({
       newAncestors.splice(0, newAncestors.length - 3);
     }
 
-    setAncestors(generateUniqueKeys(newAncestors)); 
+    setAncestors(generateUniqueKeys(newAncestors));
     setOrgChartOpen(item.key);
   };
 
@@ -125,7 +125,10 @@ function SearchResult({
               content={
                 <div>
                   {ancestors.map((item, index) => (
-                    <div key={index} style={{ paddingRight: `${index * 20}px` }}>
+                    <div
+                      key={index}
+                      style={{ paddingRight: `${index * 20}px` }}
+                    >
                       {item.title}
                     </div>
                   ))}

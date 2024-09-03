@@ -13,14 +13,14 @@ interface Props {
 }
 
 const BasicInformation: React.FC<Props> = ({
-  initialValue=[],
-  form=[],
-  isAddingNewNode=false,
-  newNodeInfo=[],
-  setNewNodeInfo= () => {},
+  initialValue = [],
+  form = [],
+  isAddingNewNode = false,
+  newNodeInfo = [],
+  setNewNodeInfo = () => {},
 }) => {
   const [users, setUsers] = useState(initialValue?.users || []);
-  
+
   useEffect(() => {
     if (isAddingNewNode) {
       setUsers([]);
@@ -34,10 +34,11 @@ const BasicInformation: React.FC<Props> = ({
     form.setFieldsValue({
       title: values.title || "",
       code: values.key || "",
-      users: values.users?.map((user: { isDefault: boolean; title: string }) => [
-        user.title,
-        user.isDefault,
-      ]) || [],
+      users:
+        values.users?.map((user: { isDefault: boolean; title: string }) => [
+          user.title,
+          user.isDefault,
+        ]) || [],
     });
   }, [initialValue, form, newNodeInfo, isAddingNewNode]);
 
